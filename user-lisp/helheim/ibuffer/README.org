@@ -1,0 +1,16 @@
+* Ibuffer done right
+
+- Buffers are grouped by project.
+- Within each project, buffers are grouped by file tree depth.
+- File paths are relative to the project root.
+- Special buffers are grouped after buffers visiting files.
+- Buffers visiting files outside of any project are grouped separately from
+  special buffers.
+- Denote IDs are stripped from buffer names.
+
+#+BEGIN_HTML
+<img width="540" alt="Image" src="https://github.com/user-attachments/assets/9a74b442-c1ae-4e64-b1fa-3fc3b323998f" />
+#+END_HTML
+
+I would be happy if someone else took care of it, but in the end someone has to.
+

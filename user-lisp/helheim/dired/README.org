@@ -1,0 +1,17 @@
+#+title: helheim-dired
+
+Dired keys are rebound, but I'm not completely satisfied with the result, so if
+you have better ideas — let me know.
+
+- =Space i= ::
+  Add timestamp-based IDs to marked files:
+  #+begin_src
+  some file.txt → 20251212T151618--some file.txt
+  #+end_src
+  The ID is the file’s creation time, formatted according to ISO 8601 — the same
+  format used by the =helheim-org= module for Org IDs. This whole concept is
+  inspired by [[https://protesilaos.com/emacs/denote][Denote]].
+
+- Dired local minor modes (such as ~dired-hide-details-mode~, ~dired-omit-mode~,
+  etc.) are converted into global minor modes, so their state persists across
+  Dired buffers.

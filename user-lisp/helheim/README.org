@@ -1,0 +1,23 @@
+* Modules
+** helheim-emacs-lisp
+
+Configure Hel to work with Emacs Lisp, see documentation for [[https://github.com/anuvyklack/hel/blob/main/docs/extensions.org#hel-paredit][hel-paredit]]
+extension.
+
+- =M= :: Show help for the symbol at point.
+
+- =Space e= :: Prefix for commands that evaluate Emacs Lisp.
+
+** helheim-tab-bar
+
+Configure *tab-bar* mode — each tab represents a set of windows (like in Vim).
+
+- =C-w tab= :: Create new tab. With =M-u= detach current window into new tab.
+- =C-w t= :: Prefix for tab-bar keys.
+  - =C-w t n= :: Display buffer for next command in new tab.
+  - =C-w t u= :: Reopen last closed tab.
+
+** helheim-git
+
+- =Space v= :: Prefix for version control commands.
+
