@@ -155,18 +155,11 @@
 
   ;; thumbnail manipulation (image-dired)
   "t" (define-keymap
-        "." 'image-dired-display-thumb
-        "d" 'image-dired-display-thumbs
-        "t" 'image-dired-dired-toggle-marked-thumbs
-        "j" 'image-dired-jump-thumbnail-buffer
-        "i" 'image-dired-dired-display-image
-        "o" 'image-dired-dired-display-external ; "t x"
-        "a" 'image-dired-display-thumbs-append
-        "c" 'image-dired-dired-comment-files
-        "f" 'image-dired-mark-tagged-files
-        "e" 'image-dired-dired-edit-comment-and-tags
-        "T" 'image-dired-tag-files
-        "r" 'image-dired-delete-tag)
+        "RET" 'image-dired-show-all-from-dir
+        "t"   'image-dired-display-thumbs ;; display thumbs for marked files
+        "i"   'image-dired-dired-toggle-marked-thumbs
+        "e"   'image-dired-dired-display-external
+        "a"   'image-dired-display-thumbs-append)
 
   ;; regexp commands
   "%" (define-keymap
@@ -188,6 +181,48 @@
           "e" 'epa-dired-do-encrypt)
 
   "G" nil) ; make "G" scroll to the end of buffer
+
+;;;; image-dired
+
+(with-eval-after-load 'image-dired
+  (hel-keymap-set image-dired-thumbnail-mode-map
+    "w"    nil ; unbind `image-dired-copy-filename-as-kill'
+    "y"   'image-dired-copy-filename-as-kill))
+
+(defvar image-dired-thumbnail-buffer "*image-dired*"
+  "Image-Dired's thumbnail buffer.")
+
+(add-to-list 'display-buffer-alist
+             `(,(regexp-quote image-dired-thumbnail-buffer)
+               (display-buffer-reuse-window display-buffer-pop-up-window)))
+
+;; TODO: Upstream this.
+;; FIX: Original `image-dired-show-all-from-dir' command is carelessly written:
+;;   it calls `image-dired-display-thumbs' which creates and displays
+;;   `image-dired-thumbnail-buffer' with `pop-to-buffer' and calls
+;;   `image-dired--update-header-line'. And then it self does it again.
+(define-advice image-dired-show-all-from-dir (:override (dir) helheim)
+  "Make a thumbnail buffer for all images in DIR and display it.
+Any file matching `image-dired--file-name-regexp' is considered an
+image file."
+  (interactive "DShow thumbnails for directory: ")
+  (dired dir)
+  (dired-mark-files-regexp (image-dired--file-name-regexp))
+  (let ((files (dired-get-marked-files nil nil nil t)))
+    (cond ((null (cdr files))
+           (message "No image files in directory"))
+          ((or (not image-dired-show-all-from-dir-max-files)
+               (<= (length (cdr files)) image-dired-show-all-from-dir-max-files)
+               (and (length> (cdr files) image-dired-show-all-from-dir-max-files)
+                    (y-or-n-p
+                     (format
+                      "Directory contains more than %d image files.  Proceed?"
+                      image-dired-show-all-from-dir-max-files))))
+           (image-dired-display-thumbs)
+           (let ((inhibit-message t))
+             (dired-unmark-all-marks))
+           (setq default-directory dir))
+          (t (message "Image-Dired canceled")))))
 
 ;;; Commands
 
