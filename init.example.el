@@ -19,6 +19,17 @@
   (dolist (charset charsets)
     (set-fontset-font fontset charset font nil add)))
 
+;; Enable Eglot LSP support
+(use-package eglot
+  :ensure t
+  :hook ((c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (python-mode . eglot-ensure)
+         (rust-mode . eglot-ensure)
+         (go-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure)))
+
 ;; General Punctuation Unicode Block
 ;; ---------------------------------
 ;;   When text is bold or italic, Emacs falls back to other fonts if the

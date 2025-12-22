@@ -71,6 +71,46 @@ cp *.ttf ~/.local/share/fonts/
 fc-cache -f -v
 ```
 
+### Language Servers (Optional)
+
+Helheim now includes Eglot LSP support. For full IDE features (go-to-definition, auto-completion, etc.), install language servers for your programming languages:
+
+**C/C++:**
+```bash
+# Debian/Ubuntu
+sudo apt install clangd
+
+# RHEL/Fedora
+sudo dnf install clang-tools-extra
+
+# Arch
+sudo pacman -S clang
+```
+
+**Python:**
+```bash
+pip install pyright
+# or
+pip install python-lsp-server
+```
+
+**Rust:**
+```bash
+rustup component add rust-analyzer
+```
+
+**Go:**
+```bash
+go install golang.org/x/tools/gopls@latest
+```
+
+**JavaScript/TypeScript:**
+```bash
+npm install -g typescript-language-server typescript
+```
+
+Without language servers, Eglot will be disabled and you'll fall back to dumb-jump (regex-based go-to-definition).
+
 ### Setup
 
 1. **Extract the bundle:**
