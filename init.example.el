@@ -19,17 +19,6 @@
   (dolist (charset charsets)
     (set-fontset-font fontset charset font nil add)))
 
-;; Enable Eglot LSP support
-(use-package eglot
-  :ensure t
-  :hook ((c-mode . eglot-ensure)
-         (c++-mode . eglot-ensure)
-         (python-mode . eglot-ensure)
-         (rust-mode . eglot-ensure)
-         (go-mode . eglot-ensure)
-         (js-mode . eglot-ensure)
-         (typescript-mode . eglot-ensure)))
-
 ;; General Punctuation Unicode Block
 ;; ---------------------------------
 ;;   When text is bold or italic, Emacs falls back to other fonts if the
@@ -85,6 +74,26 @@
 
 (require 'helheim-elpaca)
 (require 'helheim-core)
+
+;; Install newer versions of Eglot dependencies
+(use-package jsonrpc :ensure t)
+(use-package flymake :ensure t)
+(use-package external-completion :ensure t)
+
+;; Enable Eglot LSP support
+(use-package eglot
+  :ensure t
+  :config
+  (add-hook 'c-mode-hook #'eglot-ensure)
+  (add-hook 'c++-mode-hook #'eglot-ensure)
+  (add-hook 'python-mode-hook #'eglot-ensure)
+  (add-hook 'rust-mode-hook #'eglot-ensure)
+  (add-hook 'go-mode-hook #'eglot-ensure)
+  (add-hook 'js-mode-hook #'eglot-ensure)
+  (add-hook 'typescript-mode-hook #'eglot-ensure))
+
+;; Auto-pair brackets, quotes, etc.
+(electric-pair-mode 1)
 
 ;;; Color theme
 
