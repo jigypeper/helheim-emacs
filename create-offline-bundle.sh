@@ -34,6 +34,15 @@ find . -name "*~" -delete
 find . -name ".DS_Store" -delete
 rm -rf .git
 
+# Remove git repositories and caches to save space
+echo "Removing git history and caches..."
+find var/elpaca/repos -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+rm -rf var/elpaca/cache
+rm -rf var/eln-cache
+rm -rf eln-cache
+rm -rf var/autosave
+rm -rf auto-save-list
+
 # Create tarball
 echo "Creating archive..."
 cd "$TEMP_DIR"

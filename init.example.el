@@ -75,14 +75,8 @@
 (require 'helheim-elpaca)
 (require 'helheim-core)
 
-;; Install newer versions of Eglot dependencies
-(use-package jsonrpc :ensure t)
-(use-package flymake :ensure t)
-(use-package external-completion :ensure t)
-
-;; Enable Eglot LSP support
+;; Enable Eglot LSP support (built-in to Emacs 29+)
 (use-package eglot
-  :ensure t
   :config
   (add-hook 'c-mode-hook #'eglot-ensure)
   (add-hook 'c++-mode-hook #'eglot-ensure)
