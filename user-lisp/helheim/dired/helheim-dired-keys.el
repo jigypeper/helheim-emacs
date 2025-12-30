@@ -200,7 +200,7 @@
 ;; FIX: Original `image-dired-show-all-from-dir' command is carelessly written:
 ;;   it calls `image-dired-display-thumbs' which creates and displays
 ;;   `image-dired-thumbnail-buffer' with `pop-to-buffer' and calls
-;;   `image-dired--update-header-line'. And then it self does it again.
+;;   `image-dired--update-header-line'. And then it does it again itself.
 (define-advice image-dired-show-all-from-dir (:override (dir) helheim)
   "Make a thumbnail buffer for all images in DIR and display it.
 Any file matching `image-dired--file-name-regexp' is considered an
