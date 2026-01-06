@@ -140,6 +140,9 @@
 
 ;;; Keybindings
 
+;; Wait for all packages to finish loading (especially hel package with its extensions)
+(elpaca-wait)
+
 (require 'hel-leader)
 (require 'helheim-keybindings)
 (require 'helheim-disable-isearch)
