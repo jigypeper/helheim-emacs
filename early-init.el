@@ -198,6 +198,9 @@ This variable holds a list of Emacs UI features that can be enabled:
 ;; Do not load built-in package manager.
 (setq package-enable-at-startup nil)
 
+;; Prevent built-in seq from loading (Emacs 29.1 has seq 2.23, but we need 2.24+ from ELPA)
+(setq package--builtin-versions (assq-delete-all 'seq package--builtin-versions))
+
 ;; Ensure that, if the user does want package.el, it is configured correctly.
 (setq package-archives '(("melpa"  . "https://melpa.org/packages/")
                          ("gnu"    . "https://elpa.gnu.org/packages/")

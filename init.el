@@ -1,0 +1,136 @@
+;;; init.el -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; Fonts
+;;
+;; Set up fonts before anything else so error messages during startup were
+;; readable.
+;;
+;; Place cursor before character and press "ga" to see information about it.
+;; Press "<F1> k ga" to find out which command is bound to "ga".
+
+(setq use-default-font-for-symbols t)
+(let ((font (font-spec :family "Cascadia Code" :size 13.0 :weight 'normal)))
+  (set-face-font 'default font)
+  (set-face-font 'fixed-pitch font))
+
+(require 'cl-macs)
+(cl-defun helheim-set-fontset-font (font charsets &key (fontset t) add)
+  "Force some code point diapasons to use particular FONT."
+  (declare (indent 1))
+  (dolist (charset charsets)
+    (set-fontset-font fontset charset font nil add)))
+
+;; General Punctuation Unicode Block
+;; ---------------------------------
+;;   When text is bold or italic, Emacs falls back to other fonts if the
+;; main one doesn’t have the required glyphs for those styles. Force Emacs
+;; to use the main font for punctuation.
+;;
+;;   These are all the glyphs, so you can quickly see which ones your font
+;; supports:
+;;  ‐ ‑ ‒ – — ― ‖ ‗
+;; ‘ ’ ‚ ‛ “ ” „ ‟
+;; † ‡ • ‣ ․ ‥ … ‧ ‰ ‱ ′ ″ ‴ ‵ ‶ ‷ ‸ ‹ ›
+;; ※ ‼ ‽ ‾ ‿ ⁀ ⁁ ⁂ ⁃ ⁄ ⁅ ⁆ ⁇ ⁈ ⁉ ⁊ ⁋ ⁌ ⁍
+;; ⁎ ⁏ ⁐ ⁑ ⁒ ⁓ ⁔ ⁕ ⁖ ⁗ ⁘ ⁙ ⁚ ⁛ ⁜ ⁝ ⁞
+(helheim-set-fontset-font (face-font 'default) '((#x2010 . #x205e)))
+
+(helheim-set-fontset-font "Symbols Nerd Font Mono"
+  '((#xe5fa . #xe6b7) ;; Seti-UI + Custom  
+    (#xe700 . #xe8ef) ;; Devicons  
+    (#xed00 . #xf2ff) ;; Font Awesome  
+    (#xe200 . #xe2a9) ;; Font Awesome Extension  
+    (#xe300 . #xe3e3) ;; Weather  
+    (#xf400 . #xf533) #x2665 #x26A1 ;; Octicons   ♥ ⚡
+    (#x23fb . #x23fe) #x2b58 ;; IEC Power Symbols ⏻ ⏾ ⭘
+    (#xf300 . #xf381) ;; Font Logos   
+    (#xe000 . #xe00a) ;; Pomicons  
+    (#xea60 . #xec1e) ;; Codicons  
+    (#x276c . #x2771) ;; Heavy Angle Brackets ❬ ❱
+    (#xee00 . #xee0b) ;; Progress  
+    (#xf0001 . #xf1af0))) ;; Material Design Icons 󰀁 󱫰
+
+;; In the modeline, we’re not restricted by a rigid grid, and non-monospace
+;; Powerline symbols look better.
+(helheim-set-fontset-font "Symbols Nerd Font"
+  `(;; Powerline Symbols
+    (#xe0a0 . #xe0a2) ;;  
+    (#xe0b0 . #xe0b3) ;;  
+    ;; Powerline Extra Symbols
+    (#xe0b4 . #xe0c8) ;;  
+    (#xe0cc . #xe0d7) ;;  
+    #xe0a3 #xe0ca))   ;;  
+
+;;; Helheim core
+
+;; ;; In case you use VPN. Also Emacs populates `url-proxy-services' variable
+;; ;; from: `https_proxy', `socks_proxy', `no_proxy' environment variables.
+;; (setq url-proxy-services '(("socks" . "127.0.0.1:10808")
+;;                            ("https" . "127.0.0.1:10809"))
+;;       gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+(when (< emacs-major-version 31)
+  (load-file (expand-file-name "prepare-user-lisp.el" user-lisp-directory))
+  (prepare-user-lisp))
+
+(require 'helheim-elpaca)
+(require 'helheim-core)
+(require 'helheim-tree-sitter)
+
+;;; Color theme
+
+(use-package helheim-modus-themes
+  :config
+  (load-theme 'modus-operandi t))
+
+;; I can recommend `leuven' theme for org-mode work. It has so many nice little
+;; touches to spruce up org-mode elements that some users switch to it from
+;; their usual dark doom or modus themes when working on org-mode projects.
+;;   You may try it with ": load-theme" then type "leuven".
+(use-package leuven-theme :ensure t)
+
+;;; Other modules
+
+(require 'helheim-tab-bar)  ; Each tab represents a set of windows, as in Vim.
+(require 'helheim-xref)     ; Go to defenition framework
+(require 'helheim-ibuffer)  ; Buffers menu
+(require 'helheim-dired)    ; File-manager
+(require 'helheim-git)      ; Magit
+
+(require 'helheim-outline-mode) ; See "Outline Mode" in Emacs manual.
+
+;;; Search and completion
+
+(require 'helheim-corfu)    ; Code completion menus
+(require 'helheim-vertico)  ; Emacs version of command pallet
+(require 'helheim-consult)  ; A set of search commands with preview
+(require 'helheim-deadgrep) ; Interface to Ripgrep
+(require 'helheim-embark)   ; Context-aware action menus
+
+;;; Org mode
+
+;; The `org-directory' variable must be set before `helheim-org' loaded!
+(setopt org-directory (expand-file-name "~/notes/"))
+
+;; Which modules to load. Place cursor on variable and press "M" to see
+;; all possible values.
+(setq org-modules '(ol-bibtex ol-docview ol-info))
+
+(require 'helheim-org)
+(require 'helheim-org-node)
+(require 'helheim-daily-notes)
+
+;;; Major modes
+
+(require 'helheim-emacs-lisp)
+(require 'helheim-markdown)
+
+;;; Keybindings
+
+;; Wait for all packages to finish loading (especially hel package with its extensions)
+(elpaca-wait)
+
+(require 'hel-leader)
+(require 'helheim-keybindings)
+(require 'helheim-disable-isearch)
+
+;;; init.el ends here

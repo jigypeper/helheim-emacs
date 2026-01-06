@@ -7,7 +7,6 @@
 ;;; Code:
 
 (require 'xref)
-(require 'dash)
 
 (defun helheim-hook-values (hook)
   "Return list with all local and global elements of the HOOK.

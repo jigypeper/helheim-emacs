@@ -3,6 +3,7 @@
 ;;; Code:
 
 (use-package xref
+  :ensure t
   :defer t
   :custom
   (xref-search-program 'ripgrep) ; or 'ugrep
@@ -29,10 +30,12 @@
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   (remove-hook 'xref-backend-functions #'etags--xref-backend))
 
-(use-package nerd-icons-xref
-  :ensure t
-  :after xref
-  :config (nerd-icons-xref-mode))
+;; nerd-icons-xref requires Emacs 30.1+
+(when (>= emacs-major-version 30)
+  (use-package nerd-icons-xref
+    :ensure t
+    :after xref
+    :config (nerd-icons-xref-mode)))
 
 ;;; Make Xref try all backends untill first one succeed
 

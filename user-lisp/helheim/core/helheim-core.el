@@ -25,6 +25,17 @@
 (elpaca pcre2el)
 (elpaca wgrep)
 
+;; which-key needs to be available early as other packages may depend on it
+(use-package which-key
+  :ensure t
+  :hook (elpaca-after-init-hook . which-key-mode)
+  :custom
+  (which-key-lighter nil)
+  (which-key-idle-delay 1.5)
+  (which-key-idle-secondary-delay 0.25)
+  (which-key-add-column-padding 1)
+  (which-key-max-description-length 40))
+
 (elpaca avy
   (setq avy-keys (number-sequence ?a ?z) ;; Any lower-case letter a-z.
         avy-style 'at-full
@@ -40,6 +51,11 @@
   (hel-mode))
 
 (elpaca-wait)
+
+;; Install newer seq from GNU ELPA (Emacs 29.1 ships with seq 2.23, but transient needs 2.24+)
+;; Use elpaca directly (not use-package) to avoid triggering require before it's installed
+(elpaca seq)
+(elpaca-wait) ; Wait for seq to install before transient tries to load
 
 (use-package transient
   :ensure t
