@@ -19,6 +19,20 @@ if [ ! -d "$SCRIPT_DIR/var/elpaca" ]; then
     exit 1
 fi
 
+# Warn if init.el contains :ensure t which could cause network access
+if [ -f "$SCRIPT_DIR/init.el" ] && grep -q ":ensure t" "$SCRIPT_DIR/init.el"; then
+    echo "Warning: init.el contains ':ensure t' which may cause Elpaca to attempt"
+    echo "downloading packages when offline. This should be removed for offline use."
+    echo "Found in:"
+    grep -n ":ensure t" "$SCRIPT_DIR/init.el"
+    echo ""
+    read -p "Continue anyway? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+
 # Create temporary directory
 TEMP_DIR=$(mktemp -d)
 BUNDLE_DIR="$TEMP_DIR/helheim-emacs"
@@ -42,6 +56,11 @@ rm -rf var/eln-cache
 rm -rf eln-cache
 rm -rf var/autosave
 rm -rf auto-save-list
+
+# Remove compiled bytecode to ensure compatibility across Emacs versions
+echo "Removing compiled bytecode (for Emacs version compatibility)..."
+find var/elpaca/builds -name "*.elc" -type f -delete 2>/dev/null || true
+find elpa -name "*.elc" -type f -delete 2>/dev/null || true
 
 # Create tarball
 echo "Creating archive..."

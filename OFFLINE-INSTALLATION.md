@@ -170,3 +170,11 @@ fc-list | grep -i "nerd\|symbol"
 
 **Problem:** "Cannot find git executable"  
 **Solution:** Install git even if you don't need version control - some packages use it internally.
+
+**Problem:** "Eager macro-expansion failure" or "Invalid doc string" errors mentioning `.elc` files  
+**Solution:** The bundled bytecode was compiled with a different Emacs version. Remove all `.elc` files:
+```bash
+find ~/.config/emacs/var/elpaca/builds -name "*.elc" -delete
+find ~/.config/emacs/elpa -name "*.elc" -delete
+```
+Emacs will use the source `.el` files instead. For better performance, let Emacs recompile on first run (requires a few minutes).
