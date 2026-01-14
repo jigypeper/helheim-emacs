@@ -58,7 +58,8 @@ on the lab coat first becomes the doctor.
 This command, in contrast, tries all registered backends in sequence until
 the first one succeeds in finding definitions."
   (interactive)
-  (xref--show-defs (helheim-xref--create-fetcher 'definitions) nil))
+  (xref--show-defs (helheim-xref--create-fetcher 'definitions) nil)
+  (setq disable-point-adjustment t))
 
 ;;;###autoload
 (defun helheim-xref-find-references ()
@@ -66,18 +67,21 @@ the first one succeeds in finding definitions."
 Reed help for `helheim-xref-find-definitions' for the differences from
 `xref-find-references'."
   (interactive)
-  (xref--show-xrefs (helheim-xref--create-fetcher 'references) nil))
+  (xref--show-xrefs (helheim-xref--create-fetcher 'references) nil)
+  (setq disable-point-adjustment t))
 
 ;;;###autoload
 (defun helheim-xref-find-definitions-other-window ()
   "Like `helheim-xref-find-definitions' but switch to the other window."
   (interactive)
   (xref--show-defs (helheim-xref--create-fetcher 'definitions)
-                   'window))
+                   'window)
+  (setq disable-point-adjustment t))
 
 ;;;###autoload
 (defun helheim-xref-find-definitions-other-frame ()
   "Like `helheim-xref-find-definitions' but switch to the other frame."
   (interactive)
   (xref--show-defs (helheim-xref--create-fetcher 'definitions)
-                   'frame))
+                   'frame)
+  (setq disable-point-adjustment t))

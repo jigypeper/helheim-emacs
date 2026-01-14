@@ -97,7 +97,8 @@
   (interactive)
   (deactivate-mark)
   (or (ignore-errors (call-interactively 'elisp-def))
-      (call-interactively 'helheim-xref-find-definitions)))
+      (call-interactively 'helheim-xref-find-definitions))
+  (setq disable-point-adjustment t))
 
 (defun helheim-elisp-find-definitions-other-window ()
   (interactive)
