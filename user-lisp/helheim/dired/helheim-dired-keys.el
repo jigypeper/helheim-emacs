@@ -7,8 +7,8 @@
 ;; "b" key is free
 (hel-keymap-set dired-mode-map
   "h"   'dired-up-directory
-  "j"   'dired-next-line
-  "k"   'dired-previous-line
+  "j"   'helheim-dired-next-line
+  "k"   'helheim-dired-previous-line
   "l"   'dired-find-file
 
   "i"   'dired-toggle-read-only ;; wdired
@@ -120,7 +120,7 @@
   "~"       'dired-toggle-marks       ; reverse marks
   "DEL"     'dired-unmark-backward    ; <backspace>
   "* u"     'dired-unmark-all-files   ; `dired-unmark'
-  "v"       '+dired-toggle-selection
+  "v"       'helheim-dired-toggle-selection
 
   "* m"     nil ;; `dired-mark'
   "* ?"     nil ;; `dired-unmark-all-files'
@@ -228,15 +228,39 @@ image file."
 
 ;;; Commands
 
+;; j
 ;;;###autoload
-(defun +dired-toggle-selection ()
-  "Toggle selection."
-  (interactive)
-  (if (use-region-p)
-      (deactivate-mark)
-    (set-mark-command nil)))
+(defun helheim-dired-next-line (count)
+  (interactive "p" dired-mode)
+  (if (region-active-p)
+      (hel-expand-line-selection count)
+    (dired-next-line count)))
 
+;; k
 ;;;###autoload
+(defun helheim-dired-previous-line (count)
+  (interactive "p" dired-mode)
+  (if (region-active-p)
+      (hel-expand-line-selection (- count))
+    (dired-previous-line count)))
+
+;; v
+;;;###autoload
+(defun helheim-dired-toggle-selection ()
+  "Toggle selection."
+  (interactive nil dired-mode)
+  (if (use-region-p)
+      (progn
+        (deactivate-mark)
+        (helheim-enable-hl-line-mode))
+    ;; else
+    (hel-expand-line-selection 1)
+    (helheim-disable-hl-line-mode)))
+
+(dolist (cmd '(dired-mark
+               dired-unmark-all-files))
+ (advice-add cmd :after #'helheim-enable-hl-line-mode))
+
 (defalias '+dired-copy-file-name #'dired-copy-filename-as-kill)
 
 ;;;###autoload
