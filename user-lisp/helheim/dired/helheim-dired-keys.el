@@ -229,7 +229,6 @@ image file."
 ;;; Commands
 
 ;; j
-;;;###autoload
 (defun helheim-dired-next-line (count)
   (interactive "p" dired-mode)
   (if (region-active-p)
@@ -237,7 +236,6 @@ image file."
     (dired-next-line count)))
 
 ;; k
-;;;###autoload
 (defun helheim-dired-previous-line (count)
   (interactive "p" dired-mode)
   (if (region-active-p)
@@ -245,7 +243,6 @@ image file."
     (dired-previous-line count)))
 
 ;; v
-;;;###autoload
 (defun helheim-dired-toggle-selection ()
   "Toggle selection."
   (interactive nil dired-mode)
@@ -263,13 +260,11 @@ image file."
 
 (defalias '+dired-copy-file-name #'dired-copy-filename-as-kill)
 
-;;;###autoload
 (defun +dired-copy-file-path ()
   "Copy full file name (including path) into kill ring."
-  (interactive)
+  (interactive nil dired-mode)
   (dired-copy-filename-as-kill 0))
 
-;;;###autoload
 (defun +dired-do-flagged-delete-permanently ()
   "Delete files permanently instead of trashing them."
   (declare (interactive-only t))
@@ -277,7 +272,6 @@ image file."
   (let ((delete-by-moving-to-trash nil))
     (dired-do-flagged-delete)))
 
-;;;###autoload
 (defalias '+dired-delete-permanently #'+dired-do-flagged-delete-permanently)
 
 ;;;; Prepend file name with ID
