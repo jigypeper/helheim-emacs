@@ -142,7 +142,7 @@ This variable holds a list of Emacs UI features that can be enabled:
 ;;       icon-title-format  helheim-emacs-frame-title-format)
 
 ;; Disable startup screens and messages
-(setq inhibit-splash-screen t)
+(setq inhibit-startup-screen t)
 
 ;; We intentionally avoid calling `menu-bar-mode', `tool-bar-mode', and
 ;; `scroll-bar-mode' because manipulating frame parameters can trigger or queue
