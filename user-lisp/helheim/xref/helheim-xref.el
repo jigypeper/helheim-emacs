@@ -3,7 +3,7 @@
 ;;; Code:
 
 (use-package xref
-  :ensure t
+  ;; :ensure t
   :defer t
   :custom
   (xref-search-program 'ripgrep) ; or 'ugrep
