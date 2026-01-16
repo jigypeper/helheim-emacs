@@ -60,20 +60,24 @@ unconditionally."
                    (not (string-match-p ignored (file-name-nondirectory dir))))))
          (dir (expand-file-name user-lisp-directory))
          (backup-inhibited t)
-         (dirs (list dir)))
+         (dirs (list dir))
+         (files '()))
     (add-to-list 'load-path dir)
     (dolist (file (directory-files-recursively dir "" t pred))
       (cond ((and (file-regular-p file)
                   (string-suffix-p ".el" file))
-             (unless just-activate
-               (with-demoted-errors "Error while compiling: %S"
-                 (byte-recompile-file file force 0)
-                 (when (native-comp-available-p)
-                   (native-compile-async file)))))
+             (push file files))
             ((file-directory-p file)
              (add-to-list 'load-path file)
              (push file dirs))))
     (unless just-activate
+      (add-hook 'elpaca-after-init-hook
+                (lambda ()
+                  (dolist (file files)
+                    (with-demoted-errors "Error while compiling: %S"
+                      (byte-recompile-file file force 0)
+                      (when (native-comp-available-p)
+                        (native-compile-async file))))))
       (loaddefs-generate dirs autoload-file nil nil nil force))
     (when (file-exists-p autoload-file)
       (load autoload-file nil t))))
