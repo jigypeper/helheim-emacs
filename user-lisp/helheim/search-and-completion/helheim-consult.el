@@ -69,15 +69,15 @@
   (setq consult-async-input-throttle 0.2
         consult-async-input-debounce 0.1
         consult-async-refresh-delay  0.15)
-
+  ;;
   ;; Enable automatic preview at point in the *Completions* buffer.
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
-
+  ;;
   ;; Configure the register formatting and preview. This improves the register.
   (setq register-preview-delay 0.5
         register-preview-function #'consult-register-format)
   (advice-add 'register-preview :override #'consult-register-window)
-
+  ;;
   (consult-customize
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file
@@ -87,7 +87,7 @@
    consult-source-project-recent-file
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.2 any))
-
+  ;;
   (consult-customize
    consult-theme
    :preview-key '(:debounce 0.5 any)))

@@ -301,10 +301,10 @@ with the key bindings used in Magit."
   (magit-bury-buffer-function #'magit-restore-window-configuration)
   :config
   (magit-auto-revert-mode)
-
+  ;;
   ;; Turn ref links into clickable buttons.
   (add-hook 'magit-process-mode-hook #'goto-address-mode)
-
+  ;;
   ;; The mode-line isn't useful in these popups and take up valuable screen
   ;; estate, so free it up.
   (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode))

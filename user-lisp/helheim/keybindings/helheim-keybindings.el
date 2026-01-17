@@ -85,6 +85,7 @@
     "q"   'Custom-buffer-done))
 
 ;;;; Elpaca
+;; `elpaca-manager' and `elpaca-log' are the main entry points to the UI.
 
 (hel-set-initial-state 'elpaca-info-mode 'normal)
 

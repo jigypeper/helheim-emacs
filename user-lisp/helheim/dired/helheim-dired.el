@@ -23,7 +23,7 @@
   (dired-listing-switches "-lAhF -v --group-directories-first")
   ;; (dired-free-space nil)
   (dired-kill-when-opening-new-dired-buffer t)
-  (dired-dwim-target t)  ; Propose a target for intelligent moving/copying
+  (dired-dwim-target t) ;; Propose a target for intelligent moving/copying
   (dired-mouse-drag-files t) ;; 'move
   (delete-by-moving-to-trash t)
   (dired-deletion-confirmer 'y-or-n-p)
