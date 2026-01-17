@@ -5,6 +5,13 @@
 ;;
 ;;; Code:
 
+;; Lock file
+(let ((file (expand-file-name "elpaca-lock-file.eld" user-emacs-directory)))
+  (when (file-regular-p file)
+    (setq elpaca-lock-file file)))
+
+;; Allow minibuffer resizing during packages installation. We will change its
+;; value later in `helheim-core'.
 (setq resize-mini-windows t)
 
 (defvar elpaca-installer-version 0.11)
@@ -54,7 +61,6 @@
 (elpaca `(,@elpaca-order))
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
-(setq elpaca-lock-file (expand-file-name "elpaca-lock-file.el" helheim-root-directory))
 (elpaca-wait)
 
 (provide 'helheim-elpaca)
