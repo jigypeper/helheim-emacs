@@ -55,11 +55,7 @@
     "g R" 'magit-refresh-all        ;; "G"
     "Z"   'magit-stash              ;; "z"
     ;; "i"   'helheim-magit-text-mode
-    "v"   (lambda (arg)
-            (interactive "P")
-            (if (use-region-p)
-                (deactivate-mark arg)
-              (set-mark-command arg)))
+    "v"   'helheim-magit-toggle-selection
     "<escape>" (lambda ()
                  (interactive)
                  (deactivate-mark)))
@@ -249,6 +245,12 @@ with the key bindings used in Magit."
     (goto-char (point-min))))
 
 ;;;; Commands
+
+(defun helheim-magit-toggle-selection ()
+  (interactive)
+  (if (use-region-p)
+      (deactivate-mark)
+    (push-mark-command t)))
 
 ;;;###autoload
 (defun helheim-project-magit ()
