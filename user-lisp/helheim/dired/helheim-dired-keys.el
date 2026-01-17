@@ -247,16 +247,8 @@ image file."
   "Toggle selection."
   (interactive nil dired-mode)
   (if (use-region-p)
-      (progn
-        (deactivate-mark)
-        (helheim-enable-hl-line-mode))
-    ;; else
-    (hel-expand-line-selection 1)
-    (helheim-disable-hl-line-mode)))
-
-(dolist (cmd '(dired-mark
-               dired-unmark-all-files))
- (advice-add cmd :after #'helheim-enable-hl-line-mode))
+      (deactivate-mark)
+    (hel-expand-line-selection 1)))
 
 (defalias '+dired-copy-file-name #'dired-copy-filename-as-kill)
 

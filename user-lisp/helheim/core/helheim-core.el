@@ -187,12 +187,12 @@ Emacs magic happen.)
 
 (setq global-hl-line-sticky-flag t)
 
-(defun helheim-disable-hl-line-mode (&rest _)
+(defun helheim-disable-hl-line-mode ()
   "Disable `global-hl-line-mode' in current buffer."
   (setq-local global-hl-line-mode nil)
   (global-hl-line-unhighlight))
 
-(defun helheim-enable-hl-line-mode (&rest _)
+(defun helheim-enable-hl-line-mode ()
   "Re-enable `global-hl-line-mode' in current buffer."
   ;; (unless (memq major-mode '(calendar-mode)))
   (setq-local global-hl-line-mode t)
