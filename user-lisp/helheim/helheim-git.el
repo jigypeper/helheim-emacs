@@ -319,6 +319,8 @@ with the key bindings used in Magit."
     (setcar (nthcdr i project-switch-commands)
             '(helheim-project-magit "Magit"))))
 
+(elpaca git-modes)
+
 ;;; .
 (provide 'helheim-git)
 ;;; helheim-git.el ends here
