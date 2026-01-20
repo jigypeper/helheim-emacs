@@ -167,8 +167,6 @@
 
 ;;;; Magit-Section
 
-(add-hook 'magit-section-mode-hook 'helheim-disable-hl-line-mode)
-
 (with-eval-after-load 'magit-section
   (hel-keymap-set magit-section-mode-map
     "<tab>"     'magit-section-cycle
