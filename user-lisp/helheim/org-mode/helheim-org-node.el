@@ -76,7 +76,6 @@
 
 (use-package org-mem
   :ensure t
-  :load-path "~/code/emacs/org-mem"
   :custom (org-mem-do-sync-with-org-id t)
   :hook   (elpaca-after-init-hook . org-mem-updater-mode)
   :config (unless org-mem-watch-dirs
