@@ -45,6 +45,7 @@
   :ensure t
   :defer t
   :custom
+  (transient-common-command-prefix "SPC")
   ;; Pop up transient windows at the bottom of the current window instead of
   ;; entire frame. This is more ergonomic for users with large displays or many
   ;; splits.
