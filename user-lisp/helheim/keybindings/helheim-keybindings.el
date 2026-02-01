@@ -4,7 +4,7 @@
 ;; If you want to see all key bindings in a keymap, place point (cursor) on it
 ;; and press "M", or press "<F1> M" and type the name of the keymap.
 ;;
-;;; Code:
+;;; General
 (require 'hel-macros)
 (require 'hel-core)
 
@@ -20,7 +20,7 @@
   "C-x C-r" 'recentf-open ; override `find-file-read-only'
   "C-x C-d" 'dired-jump)  ; override `list-directory'
 
-;; <leader>
+;;; <Leader>
 (hel-keymap-set mode-specific-map
   "RET" 'dired-jump
   "," 'switch-to-buffer
@@ -77,7 +77,7 @@
             (or (keymap-lookup mode-specific-map "v")
                 (make-sparse-keymap))))
 
-;;;; Customize
+;;; Customize
 
 (hel-set-initial-state 'Custom-mode 'normal)
 
@@ -88,17 +88,17 @@
     "z u" 'Custom-goto-parent
     "q"   'Custom-buffer-done))
 
-;;;; Elpaca
+;;; Elpaca
 ;; `elpaca-manager' and `elpaca-log' are the main entry points to the UI.
 
 (hel-set-initial-state 'elpaca-info-mode 'normal)
 
-;;;; Ediff
+;;; Ediff
 
 (hel-set-initial-state 'ediff-mode 'motion)
 (add-hook 'ediff-keymap-setup-hook #'helheim-ediff-setup-keys)
 
-;;;; Help
+;;; Help
 
 ;; <F1>
 (hel-keymap-set help-map
@@ -117,7 +117,7 @@
               "f" 'which-key-show-full-keymap
               "k" 'which-key-show-keymap)))
 
-;;;; Info
+;;; Info
 
 (hel-set-initial-state 'Info-mode 'normal)
 
@@ -150,7 +150,7 @@
 (hel-advice-add 'Info-next-reference :before #'hel-deactivate-mark-a)
 (hel-advice-add 'Info-prev-reference :before #'hel-deactivate-mark-a)
 
-;;;; Man
+;;; Man
 
 (hel-set-initial-state 'Man-mode 'normal)
 
@@ -168,7 +168,7 @@
     "g r"   'Man-follow-manual-reference ; go to reference
     "C-w r" 'Man-update-manpage)) ; Hel's chord for revert.
 
-;;;; Magit-Section
+;;; Magit-Section
 
 (with-eval-after-load 'magit-section
   (hel-keymap-set magit-section-mode-map
@@ -196,7 +196,7 @@
     "z 3" 'magit-section-show-level-3-all
     "z 4" 'magit-section-show-level-4-all))
 
-;;;; Repeat mode
+;;; Repeat mode
 
 (put 'other-window 'repeat-map nil) ;; Use "." key instead.
 

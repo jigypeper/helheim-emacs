@@ -1,6 +1,5 @@
 ;;; helheim-core.el -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;; Commentary:
-;;; Code:
 ;;; Customization
 
 (defgroup helheim nil
