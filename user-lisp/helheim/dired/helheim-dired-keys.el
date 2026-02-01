@@ -3,186 +3,238 @@
 
 (require 'dash)
 (require 'dired)
+(require 'dired-subtree)
 
-;; "b" key is free
+;; This is full keymap — i.e. all keys from the original keymap are overriden.
 (hel-keymap-set dired-mode-map
+  "g" nil
+  ;;
+  "i"   'dired-toggle-read-only ;; wdired
+  "v"   'helheim-dired-toggle-selection
+  ;; `search-map'
+  "C-c s /" 'dired-do-find-regexp
+  "C-c s r" 'dired-do-find-regexp-and-replace ; overrides `query-replace'
+  ;; moving
   "h"   'dired-up-directory
   "j"   'helheim-dired-next-line
   "k"   'helheim-dired-previous-line
   "l"   'dired-find-file
-
-  "i"   'dired-toggle-read-only ;; wdired
-
-  "C-c i"   '("add ID" . helheim-dired-do-add-id)
-  "C-c s /" 'dired-do-find-regexp
-
-  "C-k" 'dired-prev-marked-file
-  "C-j" 'dired-next-marked-file
-
-  "/"   'dired-goto-file
-  "I"   'dired-maybe-insert-subdir ;; was on "i"
-  "K"   'dired-do-kill-lines
-  "C-c u" 'dired-undo ;; recover marks, killed lines or subdirs
-
-  ;; "o"   'dired-do-open
+  "C-j" 'dired-next-marked-file ;; "M-}"
+  "C-k" 'dired-prev-marked-file ;; "M-{"
+  "/"   'dired-goto-file        ;; "j"
+  "<"   'dired-prev-dirline
+  ">"   'dired-next-dirline
+  ;; File
   "e"   'dired-do-open ;; "e" for external
   "o"   'dired-find-file-other-window
-  "|"   'dired-do-shell-command
-
-  "s"   'dired-sort-toggle-or-edit
-  ;; "?"   'casual-dired-tmenu
-
-  "d"   'dired-flag-file-deletion
-  "x"   'dired-do-flagged-delete
-  "X"   '+dired-do-flagged-delete-permanently
-
+  "g o" 'dired-find-file-other-window
+  "O"   'dired-do-find-marked-files
+  "C-o" 'dired-display-file
+  "a"   'dired-find-alternate-file
+  "C"   'dired-do-copy
+  "M"   'dired-do-rename ;; move
+  "B"   'dired-do-byte-compile
+  "L"   'dired-do-load
+  "P"   'dired-do-print
+  "V"   'dired-view-file ;; originally `dired-do-run-mail'
+  "Z"   'dired-do-compress
+  ", z" 'dired-do-compress-to
+  ;; Change file attributes
   "c"   (define-keymap
           "p" '("change permissions" . dired-do-chmod)
           "o" '("change owner"       . dired-do-chown)
           "g" '("change group"       . dired-do-chgrp)
-          "t" '("update timestamp"   . dired-do-touch))
-
+          "t" '("update timestamp"   . dired-do-touch)
+          "i" '("add ID" . helheim-dired-do-add-id))
+  ;; Delete
+  "d"   'dired-flag-file-deletion
+  "D"   'dired-do-delete ;; delete marked (not flagged) files
+  ", d" (cons "delete"
+              (define-keymap
+                "g" '("Delete garbage files" . dired-flag-garbage-files)
+                "r" '("Delete by regexp" . dired-flag-files-regexp)
+                "#" '("Delete autosave files" . dired-flag-auto-save-files)
+                "~" '("Delete backup files" . dired-flag-backup-files)
+                "." '("Clean directory" . dired-clean-directory)
+                "/" '("Clean directory" . dired-clean-directory)))
+  "x"   'dired-do-flagged-delete
+  "X"   '+dired-do-flagged-delete-permanently
+  ;; New file or directory
+  "n"   (define-keymap
+          "f" '("Create file" . find-file)
+          "d" '("Create directory" . dired-create-directory)
+          "l" '("Create symlink" . dired-do-symlink)
+          "L" '("Create relative symlink" . dired-do-relsymlink)
+          "h" '("Create hardlink" . dired-do-hardlink))
+  "+"   'dired-create-directory
+  ;; Yank / Paste
   "p"   'dired-copy-paste-do-paste
   "y"   (define-keymap
-          "y" 'dired-copy-paste-do-copy
-          "d" 'dired-copy-paste-do-cut
-          "n" '+dired-copy-file-name
-          "p" '+dired-copy-file-path
-          "c" 'dired-do-copy
-          "m" 'dired-do-rename        ; move files
-          "l" 'dired-do-symlink
-          "L" 'dired-do-relsymlink
-          "h" 'dired-do-hardlink
-          "x" 'dired-do-shell-command
-          "X" 'dired-do-async-shell-command)
-  "g"   (define-keymap
-          "/" 'dired-do-find-regexp
-          "d" 'dired-do-delete        ; delete marked (not flagged) files
-          "o" 'dired-find-file-other-window
-          "c" 'dired-do-compress-to
-          "z" 'dired-do-compress
-          "s" 'casual-dired-sort-by-tmenu
-          "a" 'dired-show-file-type
-          "r" 'dired-do-redisplay
-          "u" 'dired-downcase
-          "U" 'dired-upcase
-          "x" 'browse-url-of-dired-file)
-
-  ;; ;; Alternative version
-  ;; "p"   'dired-copy-paste-do-paste
-  ;; "y"   (define-keymap
-  ;;         "y" 'dired-copy-paste-do-copy
-  ;;         "d" 'dired-copy-paste-do-cut
-  ;;         "n" '+dired-copy-file-name
-  ;;         "p" '+dired-copy-file-path)
-  ;; "g"   (define-keymap
-  ;;         "c" 'dired-do-copy
-  ;;         "d" 'dired-do-delete ; delete marked (not flagged) files
-  ;;         "m" 'dired-do-rename ; move files
-  ;;         "l" 'dired-do-symlink
-  ;;         "L" 'dired-do-relsymlink
-  ;;         "h" 'dired-do-hardlink
-  ;;         "s" 'casual-dired-sort-by-tmenu
-  ;;         "a" 'dired-show-file-type
-  ;;         "r" 'dired-do-redisplay
-  ;;         "u" 'dired-downcase
-  ;;         "U" 'dired-upcase
-  ;;         "x" 'dired-do-shell-command
-  ;;         "X" 'dired-do-async-shell-command)
-
-  ;; Upper case keys (except !) for operating on the marked files
-  "B"       'dired-do-byte-compile
-  "C"       'dired-do-copy
-  "D"       'dired-do-delete
-  "E"       'dired-do-open
-  "G"       'dired-do-chgrp
-  "H"       'dired-do-hardlink
-  "I"       'dired-do-info
-  "L"       'dired-do-load
-  "M"       'dired-do-rename          ; move files
-  "N"       'dired-do-man
-  "O"       'dired-do-chown
-  "P"       'dired-do-chmod           ; permissions
-  "Q"       'dired-do-find-regexp-and-replace
-  "R"       'dired-do-relsymlink
-  "S"       'dired-do-symlink
-  "T"       'dired-do-touch
-  ;; "X"       'dired-do-shell-command
-  ;; "Y"       'dired-do-relsymlink
-  "Z"       'dired-do-compress
-
-  "C-c s r" 'dired-do-find-regexp-and-replace ; bound to `query-replace' in other `search-map'
-
-  ;; Commands to mark and unmark.
-  "m"       'dired-mark
-  "u"       'dired-unmark
-  "U"       'dired-unmark-all-marks
-  "~"       'dired-toggle-marks       ; reverse marks
-  "DEL"     'dired-unmark-backward    ; <backspace>
-  "* u"     'dired-unmark-all-files   ; `dired-unmark'
-  "v"       'helheim-dired-toggle-selection
-
-  "* m"     nil ;; `dired-mark'
-  "* ?"     nil ;; `dired-unmark-all-files'
-  "* !"     nil ;; `dired-unmark-all-marks'
-
-  ;; The bindings follow a convention where the filters are mapped on
-  ;; lower-case letters or punctuation, operators are mapped on symbols
-  ;; (such as !, |, * etc.) and group commands are mapped on upper-case
-  ;; letters.  The exception to this is `p' which is bound to
-  ;; `dired-filter-pop', which is a very common operation and warrants a
-  ;; quick binding.
-  "f"   dired-filter-map
-  "F"   dired-filter-mark-map
-  "C-c t f" 'dired-filter-group-mode ;; toggle filter group
-
-  ")"   'dired-omit-mode
+          "y" '("Copy to kill-ring" . dired-copy-paste-do-copy)
+          "d" '("Cut to kill-ring" . dired-copy-paste-do-cut)
+          "n" '("Copy file name" . dired-copy-filename-as-kill)
+          "p" '("Copy full path" . +dired-copy-file-path)
+          "c" '("Copy" . dired-do-copy)
+          "m" '("Move" . dired-do-rename))
+  ;; Mark / Unmark
+  "m"   'dired-mark
+  "u"   'dired-unmark
+  "DEL" 'dired-unmark-backward  ;; <backspace>
+  "U"   'dired-unmark-all-marks ;; remove all marks from all files
+  "~"   'dired-toggle-marks     ;; reverse marks
+  ", m" (cons "mark"
+              (define-keymap
+                "c" '("Change marks" . dired-change-marks)
+                "t" '("Toggle marks" . dired-toggle-marks)
+                "u" '("Remove specific mark" . dired-unmark-all-files)
+                "N" '("Number of marked files" . dired-number-of-marked-files)
+                ;;
+                "." 'dired-filter-mark-by-extension
+                "x" '("Mark executables" . dired-filter-mark-by-executable)
+                "*" '("Mark executables" . dired-mark-executables)
+                "n" '("Mark by name" . dired-filter-mark-by-name)
+                "r" '("Mark by regex" . dired-mark-files-regexp)
+                ;; "r" '("Mark by regex" . dired-filter-mark-by-regexp)
+                "d" '("Mark directories" . dired-filter-mark-by-directory)
+                "/" '("Mark directories" . dired-mark-directories)
+                "f" '("Mark files" . dired-filter-mark-by-file)
+                "l" '("Mark symlinks" . dired-filter-mark-by-symlink)
+                "@" '("Mark symlinks" . dired-mark-symlinks)
+                "h" '("Mark dot-files" . dired-filter-mark-by-dot-files) ;; hidden-files
+                "i" '("Mark git-ignored" . dired-filter-mark-by-git-ignored)
+                "e" 'dired-filter-mark-by-predicate
+                "m" '("Mark by major-mode" . dired-filter-mark-by-mode)
+                "RET" '("Saved filters" . dired-filter-mark-by-saved-filters)
+                ;; "o" 'dired-filter-mark-by-omit
+                ;; "g" 'dired-filter-mark-by-garbage
+                ;;
+                ;; "j" 'dired-next-marked-file
+                ;; "k" 'dired-prev-marked-file
+                ))
+  "M-DEL" 'dired-unmark-all-files
+  ;; regexp commands
+  "r"   (define-keymap
+          "/" 'dired-mark-files-containing-regexp
+          "d" 'dired-flag-files-regexp
+          "m" 'dired-do-rename-regexp ;; move files
+          "c" 'dired-do-copy-regexp
+          "l" 'dired-do-symlink-regexp
+          "L" 'dired-do-relsymlink-regexp
+          "h" 'dired-do-hardlink-regexp)
+  ;; Sort
+  "s"   'dired-sort-toggle-or-edit
+  "S"   'casual-dired-sort-by-tmenu
+  ;; View manipulation
+  "K"   'dired-do-kill-lines
   "("   'dired-hide-details-mode
-
-  "z ." 'dired-omit-mode
+  ")"   'dired-omit-mode
   "z i" 'dired-hide-details-mode
-
-  ;; dired narrow
-  "n"   'dired-narrow-fuzzy
-  "N"   'dired-narrow-regexp
-  "z n" 'dired-narrow-fuzzy
-  "z N" 'dired-narrow-regexp
-
+  "z ." 'dired-omit-mode
+  ;; The bindings follow a convention where the filters are mapped
+  ;; on lower-case letters or punctuation, operators are mapped on
+  ;; symbols (such as "!", "|","*" etc.) and group commands are mapped
+  ;; on upper-case letters. The exception to this is "p" which is bound
+  ;; to `dired-filter-pop', which is a very common operation and warrants
+  ;; a quick binding.
+  "f"   dired-filter-map
+  "F"   'dired-filter-group-mode
+  "C-c t f" 'dired-filter-group-mode ;; like in Ibuffer
+  ;;   ;; dired narrow
+  ;;   "n"   'dired-narrow-fuzzy
+  ;;   "N"   'dired-narrow-regexp
+  ;;   "z n" 'dired-narrow-fuzzy
+  ;;   "z N" 'dired-narrow-regexp
+  ;; "g" commands
+  "g v" '("Restore marks" . dired-undo)
+  "g a" 'dired-show-file-type
+  "g r" 'dired-do-redisplay
+  "g u" 'dired-downcase
+  "g U" 'dired-upcase
+  "g x" 'browse-url-of-dired-file
   ;; dired-subtree
   "<tab>"     'dired-subtree-toggle
   "<backtab>" 'dired-subtree-cycle
+  "%"   'dired-subtree-mark-subtree
   "z j" 'dired-subtree-next-sibling
   "z k" 'dired-subtree-previous-sibling
+  "z J" 'dired-subtree-end
+  "z K" 'dired-subtree-beginning
   "z u" 'dired-subtree-up
-
-  ;; thumbnail manipulation (image-dired)
-  "t" (define-keymap
-        "RET" 'image-dired-show-all-from-dir
-        "t"   'image-dired-display-thumbs ;; display thumbs for marked files
-        "i"   'image-dired-dired-toggle-marked-thumbs
-        "e"   'image-dired-dired-display-external
-        "a"   'image-dired-display-thumbs-append)
-
-  ;; regexp commands
-  "%" (define-keymap
-        "/" 'dired-mark-files-containing-regexp
-        "d" 'dired-flag-files-regexp
-        "g" 'dired-flag-garbage-files
-        "m" 'dired-do-rename-regexp   ; move files
-        "c" 'dired-do-copy-regexp
-        "l" 'dired-do-symlink-regexp
-        "L" 'dired-do-relsymlink-regexp
-        "h" 'dired-do-hardlink-regexp)
-
-  ;; Encryption and decryption (epa-dired).
-  ;; ":" is occupied by `execute-extended-command'
+  "z n" 'dired-subtree-narrow
+  ;; Subdirs
+  ", s" (cons "subdir"
+              (define-keymap
+                "<tab>"     '("Cycle" . dired-hide-subdir)
+                "<backtab>" '("Cycle all" . dired-hide-all)
+                "%" '("Mark all" . dired-mark-subdir-files)
+                "i" '("Insert subdir" . dired-maybe-insert-subdir)
+                "D" '("Remove sudir" . dired-kill-subdir)
+                "d" '("down subdir" . dired-tree-down)
+                "u" '("up subdir" . dired-tree-up)
+                "j" '("next subdir" . dired-next-subdir)
+                "k" '("prev subdir" . dired-prev-subdir)
+                "s" '("goto subdir" . dired-goto-subdir)))
+  "I"   'dired-maybe-insert-subdir
+  ;; Comparison commands
+  "="   'dired-diff
+  ;; Execute external command
+  "!"   'dired-do-shell-command
+  "|"   'dired-do-shell-command
+  "&"   'dired-do-async-shell-command
+  ;; misc
+  ", u" 'dired-undo ;; recover marks, killed lines or subdirs
+  ", i" '("add ID" . helheim-dired-do-add-id)
+  "?"   'casual-dired-tmenu
+  "<remap> <vc-next-action>"   'dired-vc-next-action
+  ;; encryption and decryption (epa-dired)
+  ;; originally on  ":", but it is occupied by `execute-extended-command'
   ";"   (define-keymap
           "d" 'epa-dired-do-decrypt
           "v" 'epa-dired-do-verify
           "s" 'epa-dired-do-sign
           "e" 'epa-dired-do-encrypt)
-
-  "G" nil) ; make "G" scroll to the end of buffer
+  ;; thumbnail manipulation (image-dired)
+  "t"   (define-keymap
+          "RET" 'image-dired-show-all-from-dir
+          "t"   'image-dired-display-thumbs ;; display thumbs for marked files
+          "i"   'image-dired-dired-toggle-marked-thumbs
+          "e"   'image-dired-dired-display-external
+          "a"   'image-dired-display-thumbs-append)
+  ;; "C-t" (define-keymap
+  ;;         "d"   'image-dired-display-thumbs
+  ;;         "t"   'image-dired-tag-files
+  ;;         "r"   'image-dired-delete-tag
+  ;;         "j"   'image-dired-jump-thumbnail-buffer
+  ;;         "i"   'image-dired-dired-display-image
+  ;;         "x"   'image-dired-dired-display-external
+  ;;         "a"   'image-dired-display-thumbs-append
+  ;;         "."   'image-dired-display-thumb
+  ;;         "c"   'image-dired-dired-comment-files
+  ;;         "f"   'image-dired-mark-tagged-files
+  ;;         "C-t" 'image-dired-dired-toggle-marked-thumbs
+  ;;         "e"   'image-dired-dired-edit-comment-and-tags)
+  ;; ---------------------------------------------------------------------------
+  ;; Upper case keys
+  "A"   nil
+  "E"   nil
+  "G"   nil
+  "H"   nil
+  ;; "I"   'dired-do-info
+  ;; "N"   'dired-do-man
+  "Q"   nil
+  "T"   nil
+  "R"   nil
+  "Y"   nil
+  "W"   nil
+  ;; Lower keys
+  "b"   nil
+  "w"   nil
+  ;; ;; isearch
+  ;; "C-c s a C-s"   'dired-do-isearch
+  ;; "C-c s a C-M-s" 'dired-do-isearch-regexp
+  ;; "C-c s f C-s"   'dired-isearch-filenames
+  ;; "C-c s f C-M-s" 'dired-isearch-filenames-regexp
+  )
 
 ;;;; image-dired
 
@@ -224,7 +276,8 @@ image file."
            (let ((inhibit-message t))
              (dired-unmark-all-marks))
            (setq default-directory dir))
-          (t (message "Image-Dired canceled")))))
+          (t
+           (message "Image-Dired canceled")))))
 
 ;;; Commands
 
@@ -250,6 +303,7 @@ image file."
       (deactivate-mark)
     (hel-expand-line-selection 1)))
 
+;; To make it easier to find it in M-x menu.
 (defalias '+dired-copy-file-name #'dired-copy-filename-as-kill)
 
 (defun +dired-copy-file-path ()
@@ -265,6 +319,33 @@ image file."
     (dired-do-flagged-delete)))
 
 (defalias '+dired-delete-permanently #'+dired-do-flagged-delete-permanently)
+
+;;;; dired-subtree
+
+;; Make `dired-subtree-beginning' and `dired-subtree-end' commands
+;; work also on the top level and not only in actual subtrees. This
+;; also fix `dired-subtree-mark-subtree'.
+(define-advice dired-subtree-beginning (:override () helheim)
+  "Go to the first file in this subtree."
+  (interactive)
+  (if-let* ((ov (dired-subtree--get-ov)))
+      (progn
+        (goto-char (overlay-start ov))
+        (dired-move-to-filename))
+    ;; else
+    (call-interactively #'dired-prev-subdir)
+    (while (and (< (point) (point-max))
+                (dired-between-files))
+      (forward-line 1))))
+
+(define-advice dired-subtree-end (:override () helheim)
+  "Go to the last file in this subtree."
+  (interactive)
+  (if-let* ((ov (dired-subtree--get-ov)))
+      (progn
+        (goto-char (overlay-end ov))
+        (dired-previous-line 1))
+    (call-interactively #'dired-next-subdir)))
 
 ;;;; Prepend file name with ID
 

@@ -133,7 +133,7 @@
 
 ;;;; Keybindings
 
-;; After `dired-x' because it unconditionally binds "F" and "V" keys.
+;; Load after `dired-x' because it unconditionally binds "F" and "V" keys.
 (with-eval-after-load 'dired-x
   (require 'helheim-dired-keys))
 

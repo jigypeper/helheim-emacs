@@ -1,17 +1,211 @@
-#+title: helheim-dired
+* helheim-dired
+** Improvements
 
-Dired keys are rebound, but I'm not completely satisfied with the result, so if
-you have better ideas — let me know.
+Dired local minor modes (such as ~dired-hide-details-mode~, ~dired-omit-mode~, etc.)
+are converted into global minor modes, so their state persists across Dired
+buffers.
 
-- =Space i= ::
-  Add timestamp-based IDs to marked files:
+** Keys
+
+Dired keys are completely reworked to match Hel, and because default Dired keys
+are very outdated (as most of the defaults in Emacs) and not that good:
+
+- You have such "usefull" keys as:
+  - =I= — open file with ~info~.
+  - =N= — open file with ~man~.
+  - =V= — visit the current file as a mailbox, using VM or RMAIL.
+
+- You have 7 keys for deletion: =d=, =D=, =%d=, =#=, =.=, =~=, =%&=.
+  Good luck remembering any besides the first two even a week later.
+
+- You can open selected file with: =Enter=, =e=, =f=.
+  =Enter= is enough, =e= and =f= are usefull keys but they are wasted.
+
+| =i= | wdired           |
+| =v= | toggle selection |
+
+*** Moving
+
+| =h=, =j=, =k=, =l= | moving                    |
+| =C-j= / =C-k=  | move over marked files    |
+| =/=          | go to file                |
+| =<= / =>=      | previous / next directory |
+
+*** Create new
+
+| =n f= | new file         |
+| =n d= | new directory    |
+| =n l= | symlink          |
+| =n L= | relative symlink |
+| =n h= | hardlink         |
+
+*** Open files
+
+| =o=   | Open file in another window and move focus there.       |
+| =C-o= | Display file in another window and keep focus in Dired. |
+| =O=   | Open all marked files.                                  |
+| =e=   | Open file with "e"xternal program                       |
+
+*** Mark / Unmark files
+
+|----------------+-------------------------------------|
+| Keys           | Command                             |
+|----------------+-------------------------------------|
+| =m=              | mark                                |
+| =u=              | unmark                              |
+| =Backspace=      | unmark backward                     |
+| =U=              | remove all marks                    |
+| =~= or =,mt=       | reverse marked and unmarked files   |
+| =%=              | mark all files                      |
+| =,u= or =gv=       | restore marks                       |
+|----------------+-------------------------------------|
+| =, m c=          | change marks                        |
+| =, m u=          | remove specific mark                |
+| =, m N=          | number of marked files              |
+|----------------+-------------------------------------|
+| =, m .=          | mark by extension                   |
+| =, m n=          | mark by name                        |
+| =, m r=          | mark by regexp                      |
+| =, m d= or =, m /= | mark directories                    |
+| =, m f=          | mark files                          |
+| =, m x= or =, m *= | mark executable files               |
+| =, m l= or =, m @= | mark symbolic links                 |
+| =, m h=          | mark dot-files                      |
+| =, m i=          | mark git-ignored files              |
+|----------------+-------------------------------------|
+| =, m m=          | Mark by major-mode, i.e. ~image-mode~ |
+| =, m e=          | mark by predicate                   |
+| =, m Enter=      | mark with saved filters             |
+|----------------+-------------------------------------|
+
+*** Copy / move
+
+|----------+----------------------|
+| Keys     | Command              |
+|----------+----------------------|
+| =y y=      | copy to clipboard    |
+| =y d=      | cut to clipboard     |
+| =p=        | paste from clipboard |
+|----------+----------------------|
+| =y n=      | Copy file name       |
+| =y p=      | Copy full path       |
+|----------+----------------------|
+| =y c= or =C= | copy                 |
+| =y m= or =M= | move/rename          |
+|----------+----------------------|
+
+*** Manipulate marked files
+
+| =P=   | print                                   |
+| =Z=   | unarchive                               |
+| =, z= | archive to                              |
+| =L=   | load marked Emacs Lisp files into Emacs |
+| =B=   | byte compile marked Emacs Lisp files    |
+
+*** Delete
+
+Id Dired file deletion is done in 2 states: flag for deleteion, then execute
+deletion.
+
+|-------+---------------------------------------------------------|
+| Keys  | Command                                                 |
+|-------+---------------------------------------------------------|
+| =d=     | flag file for deletion                                  |
+| =x=     | move flagged files to trash                             |
+| =X=     | permanently delete flagged files                        |
+|-------+---------------------------------------------------------|
+| =D=     | move marked (with =m=, not flagged with =d=) files to trash |
+|-------+---------------------------------------------------------|
+| =, d g= | delete garbage files                                    |
+| =, d r= | delete files matching regexp                            |
+|-------+---------------------------------------------------------|
+
+*** Change file attributes
+
+| =c p= | change permissions ~chmod~  |
+| =c o= | change owner       ~chown~  |
+| =c g= | change group       ~chgrp~  |
+| =c t= | update timestamp   ~touch~  |
+| =c i= | prepend file name with ID |
+
+*** Regexp based commands
+
+| =r /= | Mark files whose content match REGEXP.            |
+| =r d= | Flag for deletion files whose names match REGEXP. |
+
+Following commands operate only on files marked with =*= mark or current file.
+
+| =r c= | Copy files whose names match REGEXP.                         |
+| =r m= | Move files whose names match REGEXP.                         |
+| =r l= | Create symlinks for files whose names match REGEXP.          |
+| =r L= | Create relative symlinks for files whose names match REGEXP. |
+| =r h= | Create hardlinks for files whose names match REGEXP.         |
+
+*** View manipulation
+
+| =s=        | Toggle sorting by date.                                       |
+| =S=        | Sorting menu                                                  |
+| =K=        | Remove marked lines from Dired buffer without removing files. |
+| =,u= or =gv= | Restore marks / deleted lines (~dired-undo~)                    |
+| =zi= or =(=  | Toggle detailed information display.                          |
+| =z.= or =)=  | Toggle hidden files display.                                  |
+
+**** Filtering view ([[https://github.com/Fuco1/dired-hacks/blob/master/dired-filter.el][dired-filter]] from dired-hacks)
+
+The bindings follow a convention where the filters are mapped on lower-case
+letters or punctuation, operators are mapped on symbols (such as =!=, =|=, =*= etc.)
+and group commands are mapped on upper-case letters. The exception to this is =p=
+which is bound to ~dired-filter-pop~, which is a very common operation and
+warrants a quick binding.
+
+| =f=            | filter keymap                        |
+| =F= or =SPC t f= | filter-groups mode (like in Ibuffer) |
+
+**** Several directories in Dired buffer
+
+| =, s TAB=   | Cycle current subdir                   |
+| =, s S-TAB= | Cycle all subdirs                      |
+| =, s i=     | Insert subdir in the same Dired buffer |
+| =, s D=     | Remove sudir                           |
+| =, s d=     | down                                   |
+| =, s u=     | up                                     |
+| =, s j=     | next                                   |
+| =, s k=     | prev                                   |
+| =, s s=     | goto subdir                            |
+
+**** [[https://github.com/Fuco1/dired-hacks/blob/master/dired-subtree.el][dired-subtree]] (from dired-hacks)
+
+| =TAB=   | toggle            |
+| =S-TAB= | cycle             |
+| =z j=   | next sibling      |
+| =z k=   | previous sibling  |
+| =z J=   | subtree end       |
+| =z K=   | subtree beginning |
+| =z u=   | subtree up        |
+| =z n=   | narrow to subtree |
+
+*** Misc
+
+| =ǀ= | shell command       |
+| =&= | async shell command |
+
+
+| =gu= / =gU= | Downcase / upcase file names               |
+| =gx=      | ~browse-url-of-dired-file~                   |
+| =ga=      | Show file type                             |
+| ~=~       | ~dired-diff~                                 |
+| =?=       | Dired Casual menu                          |
+
+
+| =SPC s /= | Find all matches for regexp in marked files    |
+| =SPC s r= | Replace all matches for regexp in marked files |
+
+- =,i= or =ci= ::
+  Prepend marked files names with timestamp-based IDs:
   #+begin_src
   some file.txt → 20251212T151618--some file.txt
   #+end_src
-  The ID is the file’s creation time, formatted according to ISO 8601 — the same
-  format used by the =helheim-org= module for Org IDs. This whole concept is
-  inspired by [[https://protesilaos.com/emacs/denote][Denote]].
+  The ID is the file’s creation time, formatted according to ISO 8601 —
+  the same format used by the =helheim-org= module for Org IDs. This whole
+  concept is inspired by [[https://protesilaos.com/emacs/denote][Denote]].
 
-- Dired local minor modes (such as ~dired-hide-details-mode~, ~dired-omit-mode~,
-  etc.) are converted into global minor modes, so their state persists across
-  Dired buffers.
