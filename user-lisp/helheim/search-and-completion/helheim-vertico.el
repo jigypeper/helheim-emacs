@@ -21,9 +21,6 @@
     "G"     'vertico-last)
 
   (hel-keymap-set vertico-map
-    "M-j"   'next-history-element
-    "M-k"   'previous-history-element
-
     "C-j"   'vertico-next
     "C-k"   'vertico-previous
     "C-S-j" 'vertico-next-group
