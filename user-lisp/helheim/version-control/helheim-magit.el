@@ -109,9 +109,9 @@
           ", e" 'magit-edit-thing
           ", o" 'magit-browse-thing
           ", y" 'magit-copy-thing ;; it seams it does nothing currently
-          ", n" 'magit-next-reference
-          ", p" 'magit-previous-reference
-          ", N" 'magit-previous-reference
+          "g n" 'magit-next-reference
+          "g p" 'magit-previous-reference
+          "g N" 'magit-previous-reference
           "C-c C-c" 'magit-dispatch
           "C-c SPC" 'magit-dispatch ;; <leader><leader>
           "C-c C-r" 'magit-next-reference
@@ -134,16 +134,7 @@
         (define-keymap
           :parent magit-mode-map
           "<remap> <dired-jump>" 'magit-dired-jump
-          "/"   'magit-status-jump
-          "g z" 'magit-jump-to-stashes
-          "g t" 'magit-jump-to-tracked
-          "g n" 'magit-jump-to-untracked
-          "g s" 'magit-jump-to-staged
-          "g u" 'magit-jump-to-unstaged
-          "g f" 'magit-jump-to-unpulled-from-upstream
-          "g F" 'magit-jump-to-unpulled-from-pushremote
-          "g p" 'magit-jump-to-unpushed-to-upstream
-          "g P" 'magit-jump-to-unpushed-to-pushremote))
+          "/" 'magit-status-jump))
 
 ;;;;; Magit diff
 
