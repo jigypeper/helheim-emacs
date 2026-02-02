@@ -89,7 +89,8 @@
                 "u" '("Remove specific mark" . dired-unmark-all-files)
                 "N" '("Number of marked files" . dired-number-of-marked-files)
                 ;;
-                "." 'dired-filter-mark-by-extension
+                "." '("Mark by extension" . dired-filter-mark-by-extension)
+                ;; "." '("Mark by extension" . dired-mark-extension)
                 "x" '("Mark executables" . dired-filter-mark-by-executable)
                 "*" '("Mark executables" . dired-mark-executables)
                 "n" '("Mark by name" . dired-filter-mark-by-name)
@@ -102,7 +103,8 @@
                 "@" '("Mark symlinks" . dired-mark-symlinks)
                 "h" '("Mark dot-files" . dired-filter-mark-by-dot-files) ;; hidden-files
                 "i" '("Mark git-ignored" . dired-filter-mark-by-git-ignored)
-                "e" 'dired-filter-mark-by-predicate
+                "e" '("Mark by predicate" . dired-filter-mark-by-predicate)
+                "(" '("Mark by sexp" . dired-mark-sexp)
                 "m" '("Mark by major-mode" . dired-filter-mark-by-mode)
                 "RET" '("Saved filters" . dired-filter-mark-by-saved-filters)
                 ;; "o" 'dired-filter-mark-by-omit
