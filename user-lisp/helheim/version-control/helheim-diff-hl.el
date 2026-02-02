@@ -20,6 +20,7 @@
     "{"   '("View prev hunk" . diff-hl-show-hunk-previous)
     "s"   '("Stage hunk" . diff-hl-stage-dwim)
     "r"   '("Revert hunk" . diff-hl-revert-hunk)
+    "u"   '("Unstage file" . diff-hl-unstage-file)
     "="   '("Goto hunk" . diff-hl-diff-goto-hunk)
     "*"    nil
     "n"    nil

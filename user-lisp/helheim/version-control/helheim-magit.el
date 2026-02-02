@@ -27,6 +27,7 @@
         (define-keymap
           :parent magit-section-mode-map
           "C-<return>" 'magit-visit-thing
+          "M-<return>" 'magit-visit-thing
           "RET"        'magit-visit-thing
           "M-TAB"      'magit-dired-jump
           "M-<tab>"    'magit-section-cycle-diffs
@@ -160,6 +161,8 @@
   ;; `magit-file-section-map' and `magit-hunk-section-map' keymaps are
   ;; inherited from `magit-diff-section-map'.
   (hel-keymap-set magit-diff-section-map
+    "C-<return>" 'magit-diff-visit-worktree-file
+    "M-<return>" 'magit-diff-visit-worktree-file
     ", t" 'magit-diff-trace-definition
     ", e" 'magit-diff-edit-hunk-commit
     "C-j" nil) ;; unbind `magit-diff-visit-worktree-file'
@@ -197,13 +200,14 @@
 ;;;;; Transient dispatches
 
 (with-eval-after-load 'magit
-  (transient-suffix-put 'magit-dispatch "Z" :key "%") ; `magit-worktree'
-  (transient-suffix-put 'magit-dispatch "z" :key "Z") ; `magit-stash'
+  (transient-suffix-put 'magit-dispatch "Z" :key "%") ;; `magit-worktree'
+  (transient-suffix-put 'magit-dispatch "z" :key "Z") ;; `magit-stash'
   ;;
-  (transient-suffix-put 'magit-branch "d" :key "D")   ; `magit-branch.<branch>.description'
-  (transient-suffix-put 'magit-branch "k" :key "d")   ; `magit-branch-delete'
+  (transient-suffix-put 'magit-branch "d" :key "D") ;; `magit-branch.<branch>.description'
+  (transient-suffix-put 'magit-branch "k" :key "d") ;; `magit-branch-delete'
   ;;
-  (transient-suffix-put 'magit-stash  "k" :key "d"))  ; `magit-stash-drop'
+  (transient-suffix-put 'magit-stash "k" :key "d") ;; `magit-stash-drop'
+  (transient-suffix-put 'magit-worktree "k" :key "d")) ;; `magit-worktree-delete'
 
 ;;;; Git commit
 
