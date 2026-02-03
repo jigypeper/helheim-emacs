@@ -14,11 +14,11 @@
 ;;; Code:
 ;; In case of error start Emacs from command line with `--debug-init' key, or
 ;; uncomment:
-;;-----------------------
-;; (setq init-file-debug
+;;------------------------
+;; (setq init-file-debug t
 ;;       debug-on-error t
 ;;       debug-on-quit t)
-;;-----------------------
+;;------------------------
 
 ;;; Garbage collector
 
