@@ -141,16 +141,16 @@ Following commands operate only on files marked with =*= mark or current file.
 | =r L= | Create relative symlinks for files whose names match REGEXP. |
 | =r h= | Create hardlinks for files whose names match REGEXP.         |
 
-*** View manipulation
+*** View
 
 | =s=        | Toggle sorting by date.                                       |
 | =S=        | Sorting menu                                                  |
-| =K=        | Remove marked lines from Dired buffer without removing files. |
+| =K=        | Remove marked lines from Dired buffer without deleting files. |
 | =,u= or =gv= | Restore marks / deleted lines (~dired-undo~)                    |
 | =zi= or =(=  | Toggle detailed information display.                          |
 | =z.= or =)=  | Toggle hidden files display.                                  |
 
-**** Filtering view ([[https://github.com/Fuco1/dired-hacks/blob/master/dired-filter.el][dired-filter]] from dired-hacks)
+**** [[https://github.com/Fuco1/dired-hacks/blob/master/dired-filter.el][dired-filter]] (from dired-hacks)
 
 The bindings follow a convention where the filters are mapped on lower-case
 letters or punctuation, operators are mapped on symbols (such as =!=, =|=, =*= etc.)
@@ -158,8 +158,13 @@ and group commands are mapped on upper-case letters. The exception to this is =p
 which is bound to ~dired-filter-pop~, which is a very common operation and
 warrants a quick binding.
 
-| =f=            | filter keymap                        |
-| =F= or =SPC t f= | filter-groups mode (like in Ibuffer) |
+| =f=            | filters keymap                                            |
+| =F= or =SPC t f= | filter-groups mode (like in Ibuffer)                      |
+
+**** [[https://github.com/Fuco1/dired-hacks/blob/master/dired-narrow.el][dired-narrow]] (from dired-hacks)
+
+| =zn= | Narrow view to the files matching a fuzzy string. |
+| =zN= | Narrow view to the files matching a REGEXP.       |
 
 **** Several directories in Dired buffer
 
@@ -182,7 +187,6 @@ warrants a quick binding.
 | =z J=   | subtree end       |
 | =z K=   | subtree beginning |
 | =z u=   | subtree up        |
-| =z n=   | narrow to subtree |
 
 *** Misc
 
@@ -219,7 +223,7 @@ warrants a quick binding.
 ** Tips
 *** How to narrow dired buffer to marked files
 1. Mark necessary files with =m=.
-2. =t= to revert marked files.
+2. =~= to revert marked files.
 3. =K= to kill marked lines. It does *not* delete the files,
    just the lines in the dired buffer.
 

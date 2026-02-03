@@ -141,11 +141,9 @@
   "f"   dired-filter-map
   "F"   'dired-filter-group-mode
   "C-c t f" 'dired-filter-group-mode ;; like in Ibuffer
-  ;;   ;; dired narrow
-  ;;   "n"   'dired-narrow-fuzzy
-  ;;   "N"   'dired-narrow-regexp
-  ;;   "z n" 'dired-narrow-fuzzy
-  ;;   "z N" 'dired-narrow-regexp
+  ;; dired narrow
+  "z n" 'dired-narrow-fuzzy
+  "z N" 'dired-narrow-regexp
   ;; "g" commands
   "g v" '("Restore marks" . dired-undo)
   "g a" 'dired-show-file-type
@@ -162,7 +160,7 @@
   "z J" 'dired-subtree-end
   "z K" 'dired-subtree-beginning
   "z u" 'dired-subtree-up
-  "z n" 'dired-subtree-narrow
+  ;; "z n" 'dired-subtree-narrow
   ;; Subdirs
   ", s" (cons "subdir"
               (define-keymap
