@@ -8,6 +8,8 @@
 (require 'hel-macros)
 (require 'hel-core)
 
+(global-set-key [remap keyboard-quit] #'helheim-keyboard-quit)
+
 (hel-keymap-global-set :state 'insert
   "C-/"   'hippie-expand)
 
