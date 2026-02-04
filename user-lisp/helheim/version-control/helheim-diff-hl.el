@@ -1,35 +1,28 @@
 ;;; helheim-diff-hl.el -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;; Keybindings
+;;;; Entry points
 
-(hel-keymap-global-set :state 'normal
-  "] ]" 'diff-hl-next-hunk
-  "[ [" 'diff-hl-previous-hunk
-  "[ {" 'diff-hl-show-hunk-previous
-  "] }" 'diff-hl-show-hunk-next
-  "] v" 'diff-hl-show-hunk-next
-  "[ v" 'diff-hl-show-hunk-previous)
-
-;; Under "<leader>v" prefix
-(setopt diff-hl-command-prefix (kbd "C-c v"))
 (with-eval-after-load 'diff-hl
-  (hel-keymap-set diff-hl-command-map
-    "]"   '("Next hunk" . diff-hl-next-hunk)
-    "["   '("Prev hunk" . diff-hl-previous-hunk)
-    "v"   '("View hunk" . diff-hl-show-hunk)
-    "}"   '("View next hunk" . diff-hl-show-hunk-next)
-    "{"   '("View prev hunk" . diff-hl-show-hunk-previous)
-    "s"   '("Stage hunk" . diff-hl-stage-dwim)
-    "r"   '("Revert hunk" . diff-hl-revert-hunk)
-    "u"   '("Unstage file" . diff-hl-unstage-file)
-    "="   '("Goto hunk" . diff-hl-diff-goto-hunk)
-    "*"    nil
-    "n"    nil
-    "S"    nil))
+  (hel-keymap-set diff-hl-mode-map :state 'normal
+    "] v" 'diff-hl-show-hunk-next
+    "[ v" 'diff-hl-show-hunk-previous)
+  (hel-keymap-set diff-hl-mode-map
+    "C-c v ]" '("Next hunk" . diff-hl-next-hunk)
+    "C-c v [" '("Prev hunk" . diff-hl-previous-hunk)
+    "C-c v V" '("View hunk" . diff-hl-show-hunk)
+    "C-c v }" '("View next hunk" . diff-hl-show-hunk-next)
+    "C-c v {" '("View prev hunk" . diff-hl-show-hunk-previous)
+    "C-c v s" '("Stage hunk" . diff-hl-stage-dwim)
+    "C-c v r" '("Revert hunk" . diff-hl-revert-hunk)
+    "C-c v u" '("Unstage file" . diff-hl-unstage-file)
+    "C-c v =" '("Goto hunk" . diff-hl-diff-goto-hunk)))
+
+;;;; diff-hl-show-hunk mode
 
 (with-eval-after-load 'diff-hl-show-hunk
   (hel-keymap-set diff-hl-show-hunk-map :state 'motion
-    "[" 'diff-hl-show-hunk-previous
-    "]" 'diff-hl-show-hunk-next)
+    "["   'diff-hl-show-hunk-previous
+    "]"   'diff-hl-show-hunk-next)
   (hel-keymap-set diff-hl-show-hunk-map
     "C-j" 'diff-hl-show-hunk-next
     "C-k" 'diff-hl-show-hunk-previous
@@ -63,7 +56,7 @@
   :custom
   (diff-hl-show-staged-changes nil)
   (diff-hl-show-hunk-function 'diff-hl-show-hunk-inline)
-  ;; (diff-hl-show-hunk-inline-smart-lines nil)
+  (diff-hl-show-hunk-inline-smart-lines nil)
   :hook
   (elpaca-after-init-hook . global-diff-hl-mode)
   (dired-mode-hook . diff-hl-dired-mode)
@@ -71,7 +64,16 @@
   ;; (dired-mode-hook . diff-hl-dired-mode-unless-remote)
   ;; (vc-dir-mode-hook . turn-on-diff-hl-mode)
   ;; (diff-hl-mode-hook . diff-hl-flydiff-mode)
-  (diff-hl-mode-hook . diff-hl-show-hunk-mouse-mode))
+  (diff-hl-mode-hook . diff-hl-show-hunk-mouse-mode)
+  :init
+  ;; Suppress default repeat-map assigment.
+  (setq diff-hl-repeat-exceptions '(diff-hl-revert-hunk
+                                    diff-hl-previous-hunk
+                                    diff-hl-next-hunk
+                                    diff-hl-show-hunk
+                                    diff-hl-show-hunk-previous
+                                    diff-hl-show-hunk-next
+                                    diff-hl-stage-dwim)))
 
 ;;; .
 (provide 'helheim-diff-hl)
