@@ -1,5 +1,6 @@
 ;;; helheim-magit.el -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;; Keybindings
+
 (require 'hel-core)
 
 ;; Entry points

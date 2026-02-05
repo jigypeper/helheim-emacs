@@ -5,24 +5,26 @@
 ;; and press "M", or press "<F1> M" and type the name of the keymap.
 ;;
 ;;; General
+
 (require 'hel-macros)
 (require 'hel-core)
-
-(global-set-key [remap keyboard-quit] #'helheim-keyboard-quit)
-
-(hel-keymap-global-set :state 'insert
-  "C-/"   'hippie-expand)
 
 (hel-keymap-global-set :state 'normal
   "z SPC" 'cycle-spacing
   "z ."   'set-fill-prefix)
 
+(hel-keymap-global-set :state 'insert
+  "C-/"   'hippie-expand)
+
 (hel-keymap-global-set
+  "<remap> <keyboard-quit>" 'helheim-keyboard-quit ; "C-g"
+  ;;
   "C-x C-b" 'ibuffer-jump ; override `list-buffers'
   "C-x C-r" 'recentf-open ; override `find-file-read-only'
   "C-x C-d" 'dired-jump)  ; override `list-directory'
 
 ;;; <Leader>
+
 (hel-keymap-set mode-specific-map
   "RET" 'dired-jump
   "," 'switch-to-buffer
@@ -31,13 +33,13 @@
   "b" (cons "buffer"
             (hel-keymap-set (or (keymap-lookup mode-specific-map "b")
                                 (make-sparse-keymap))
-              "b" 'ibuffer-jump        ; "<leader> bb"
-              "n" 'switch-to-buffer    ; next key after "b"
+              "b" 'ibuffer-jump        ;; "<leader> bb"
+              "n" 'switch-to-buffer    ;; next key after "b"
               "s" 'save-buffer
               "w" 'write-file
-              "d" 'kill-current-buffer ; also "C-w d"
-              "z" 'bury-buffer         ; also "C-w z"
-              "g" 'revert-buffer       ; also "C-w r"
+              "d" 'kill-current-buffer ;; also "C-w d"
+              "z" 'bury-buffer         ;; also "C-w z"
+              "g" 'revert-buffer       ;; also "C-w r"
               "r" 'rename-buffer
               "x" 'scratch-buffer
               ;; Bookmarks
@@ -69,7 +71,8 @@
             (hel-keymap-set (or (keymap-lookup mode-specific-map "t")
                                 (make-sparse-keymap))
               "w" '("Wrap lines" . +word-wrap-mode)
-              "r" '("Read only" . read-only-mode))) ;; "C-x C-q"
+              "r" '("Read only" . read-only-mode) ;; "C-x C-q"
+              "$" 'set-selective-display)) ;; "C-x $"
   "s" (cons "search"
             (hel-keymap-set search-map
               "a" 'xref-find-apropos
@@ -81,9 +84,10 @@
 
 ;;; Customize
 
-(hel-set-initial-state 'Custom-mode 'normal)
-
-(with-eval-after-load 'cus-edit
+(use-package cus-edit
+  :defer t
+  :init (hel-set-initial-state 'Custom-mode 'normal)
+  :config
   (hel-keymap-set custom-mode-map :state 'normal
     "z j" 'widget-forward
     "z k" 'widget-backward
@@ -131,22 +135,23 @@
     "z k"   'Info-backward-node
     "z u"   'Info-up
     "z d"   'Info-directory
-    "z ~"   'Info-directory ;; ~ for "home"
-
+    "z ~"   'Info-directory ;; "~" if for "home"
+    ;;
     "z h"   'Info-history
     "u"     'Info-history-back
     "U"     'Info-history-forward
     "C-<i>" 'Info-history-forward
     "C-o"   'Info-history-back
-
+    ;;
     "g t"   'Info-toc
     "g i"   'Info-index ; imenu
     "g I"   'Info-virtual-index
-
+    "g m"   'Info-menu
+    ;;
     "z i"   'Info-index
     "z I"   'Info-virtual-index
     "C-c s a" 'info-apropos
-
+    ;;
     "M-h"   'Info-help))
 
 (hel-advice-add 'Info-next-reference :before #'hel-deactivate-mark-a)
@@ -154,36 +159,35 @@
 
 ;;; Man
 
-(hel-set-initial-state 'Man-mode 'normal)
-
-;; User may also enable `outline-minor-mode' in a Man buffer, so the keys
-;; should possibly not interfere with it.
-(with-eval-after-load 'man
+(use-package man
+  :defer t
+  :init (hel-set-initial-state 'Man-mode 'normal)
+  :config
+  (add-hook 'Man-mode-hook
+            (defun helheim-man-mode-h ()
+              (setq-local revert-buffer-function (lambda (&rest _)
+                                                   (Man-update-manpage)))))
+  ;; User may also enable `outline-minor-mode' in a Man buffer, so the keys
+  ;; should possibly not interfere with it.
   (hel-keymap-set Man-mode-map :state 'normal
-    "] ]"   'Man-next-manpage
-    "[ ["   'Man-previous-manpage
-    "z h"   'Man-next-manpage     ; left
-    "z l"   'Man-previous-manpage ; right
-    "z j"   'Man-next-section     ; up
-    "z k"   'Man-previous-section ; down
-    "z /"   'Man-goto-section     ; Related to sections — that’s why on ‘z’ layer.
-    "g r"   'Man-follow-manual-reference ; go to reference
-    "C-w r" 'Man-update-manpage)) ; Hel's chord for revert.
+    "] ]" 'Man-next-manpage
+    "[ [" 'Man-previous-manpage
+    "z h" 'Man-next-manpage     ;; left
+    "z l" 'Man-previous-manpage ;; right
+    "z j" 'Man-next-section     ;; up
+    "z k" 'Man-previous-section ;; down
+    "z /" 'Man-goto-section     ;; On "z" layer becacuse related to sections.
+    "g r" 'Man-follow-manual-reference)) ; go to reference
 
-;;; Magit-Section
+;;; Magit-section
 
 (with-eval-after-load 'magit-section
   (hel-keymap-set magit-section-mode-map
+    :unset '("M-1" "M-2" "M-3" "M-4" "C-c TAB" "C-<tab>" "M-<tab>")
     "<tab>"     'magit-section-cycle
-    "<backtab>" 'magit-section-cycle-global ; S-<tab>
-    "C-j"       'magit-section-forward-sibling
-    "C-k"       'magit-section-backward-sibling
-    "n"         'magit-section-forward
-    "N"         'magit-section-backward
-    "C-<tab>"   nil
-    "M-<tab>"   nil
-    "C-c TAB"   nil)
-  (hel-keymap-set magit-section-mode-map :state 'motion
+    "<backtab>" 'magit-section-cycle-global ;; "S-<tab>"
+    "C-j" 'magit-section-forward-sibling
+    "C-k" 'magit-section-backward-sibling
     "z j" 'magit-section-forward
     "z k" 'magit-section-backward
     "z u" 'magit-section-up
@@ -193,6 +197,10 @@
     "z O" 'magit-section-show-children
     "z m" 'magit-section-show-level-1-all
     "z r" 'magit-section-show-level-4-all
+    "1"   'magit-section-show-level-1
+    "2"   'magit-section-show-level-2
+    "3"   'magit-section-show-level-3
+    "4"   'magit-section-show-level-4
     "z 1" 'magit-section-show-level-1-all
     "z 2" 'magit-section-show-level-2-all
     "z 3" 'magit-section-show-level-3-all

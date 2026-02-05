@@ -1,29 +1,8 @@
 ;;; helheim-ediff-keys.el -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;
-;; WARNING: Don't load this file manually!
-;;
-;; It is automatically loaded by `helheim-keybindings' module in
-;; `ediff-keymap-setup-hook'.
-;;
-;; | Command                   | Ediff Original |   Helheim   |
-;; |---------------------------+----------------+-------------|
-;; | ediff-next-difference     | n, SPC         | j, n, SPC   |
-;; | ediff-previous-difference | p, DEL         | k, N, DEL   |
-;; | ediff-jump-to-difference  | j              | d           |
-;; | jump to first difference  | 1j             | gg          |
-;; | jump to last difference   | N/A            | G           |
-;; | copy region A to region B | a              | a, l        |
-;; | copy region B to region A | b              | b, h        |
-;; | scroll down 1 line        | C-u 1 v        | C-e         |
-;; | scroll up 1 line          | C-u 1 V        | C-y         |
-;; | scroll down half page     | v, C-v         | C-d, v, C-v |
-;; | scroll up half page       | V, M-v         | C-u, V, M-v |
-;; | scroll left               | >              | zh          |
-;; | scroll right              | <              | zl          |
-;; | toggle highlighting       | h              | H           |
-;; | ediff-suspend             | z              | C-z         |
-;; | restore old diff          | ra, rb, rc     | ua, ub, uc  |
+;; WARNING: Don't load this file manually! It is automatically loaded
+;;   by `helheim-keybindings' module in `ediff-keymap-setup-hook'.
 ;;
 ;; All credit goes to the `evil-collection' package.
 ;;
