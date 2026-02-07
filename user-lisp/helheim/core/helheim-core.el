@@ -834,6 +834,13 @@ the unwritable tidbits."
 ;; Create separate *Occur* buffer for each search.
 (add-hook 'occur-hook 'occur-rename-buffer)
 
+;; Open `occur-mode' buffer in another window.
+(add-to-list 'display-buffer-alist
+             '((major-mode . occur-mode)
+               (display-buffer-use-some-window display-buffer-pop-up-window)
+               (inhibit-same-window . t)
+               (body-function . select-window)))
+
 ;;;; project.el
 
 (setq project-vc-extra-root-markers '(".project")
