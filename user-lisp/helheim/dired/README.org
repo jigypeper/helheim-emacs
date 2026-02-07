@@ -188,6 +188,14 @@ warrants a quick binding.
 | =z K=   | subtree beginning |
 | =z u=   | subtree up        |
 
+*** Search
+
+| =SPC s /= | Find all matches for regexp in marked files                           |
+| =SPC s r= | Replace all matches for regexp in marked files                        |
+| =SPC s f= | ~fd-dired~: Run ~fd~ and show output in Dired buffer                      |
+| =SPC s n= | ~fd-name-dired~: Search recursively for files matching globbing PATTERN |
+| =SPC s g= | ~fd-grep-dired~: Find files that content matches REGEXP                 |
+
 *** Misc
 
 | =ǀ= | shell command       |
@@ -199,10 +207,6 @@ warrants a quick binding.
 | =ga=      | Show file type                             |
 | ~=~       | ~dired-diff~                                 |
 | =?=       | Dired Casual menu                          |
-
-
-| =SPC s /= | Find all matches for regexp in marked files    |
-| =SPC s r= | Replace all matches for regexp in marked files |
 
 - =,i= or =ci= ::
   Prepend marked files names with timestamp-based IDs:

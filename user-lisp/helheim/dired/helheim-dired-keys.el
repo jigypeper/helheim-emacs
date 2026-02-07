@@ -12,6 +12,9 @@
   "i"   'dired-toggle-read-only ;; wdired
   "v"   'helheim-dired-toggle-selection
   ;; `search-map'
+  "C-c s f" 'fd-dired
+  "C-c s n" 'find-name-dired
+  "C-c s g" 'fd-grep-dired
   "C-c s /" 'dired-do-find-regexp
   "C-c s r" 'dired-do-find-regexp-and-replace ; overrides `query-replace'
   ;; moving

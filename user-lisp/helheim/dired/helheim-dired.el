@@ -76,6 +76,8 @@
              dired-copy-paste-do-cut
              dired-copy-paste-do-paste))
 
+(elpaca fd-dired)
+
 (use-package dired-filter
   :ensure t
   :after dired
