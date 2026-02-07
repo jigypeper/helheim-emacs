@@ -245,11 +245,7 @@ cookies.")
       custom-theme-directory (expand-file-name "themes/" helheim-root-directory)
       custom-file            (expand-file-name "custom.el" helheim-root-directory))
 
-;; Load "custom.el" file.
-(add-hook 'after-init-hook (lambda ()
-                             (let ((inhibit-message t))
-                               (when (file-exists-p custom-file)
-                                 (load-file custom-file)))))
+(add-hook 'after-init-hook (lambda () (load custom-file t t)))
 
 ;; Local variables:
 ;; byte-compile-warnings: (not obsolete free-vars)
