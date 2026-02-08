@@ -85,37 +85,8 @@
   "DEL" 'dired-unmark-backward  ;; <backspace>
   "U"   'dired-unmark-all-marks ;; remove all marks from all files
   "~"   'dired-toggle-marks     ;; reverse marks
-  ", m" (cons "mark"
-              (define-keymap
-                "c" '("Change marks" . dired-change-marks)
-                "t" '("Toggle marks" . dired-toggle-marks)
-                "u" '("Remove specific mark" . dired-unmark-all-files)
-                "N" '("Number of marked files" . dired-number-of-marked-files)
-                ;;
-                "." '("Mark by extension" . dired-filter-mark-by-extension)
-                ;; "." '("Mark by extension" . dired-mark-extension)
-                "x" '("Mark executables" . dired-filter-mark-by-executable)
-                "*" '("Mark executables" . dired-mark-executables)
-                "n" '("Mark by name" . dired-filter-mark-by-name)
-                "r" '("Mark by regex" . dired-mark-files-regexp)
-                ;; "r" '("Mark by regex" . dired-filter-mark-by-regexp)
-                "d" '("Mark directories" . dired-filter-mark-by-directory)
-                "/" '("Mark directories" . dired-mark-directories)
-                "f" '("Mark files" . dired-filter-mark-by-file)
-                "l" '("Mark symlinks" . dired-filter-mark-by-symlink)
-                "@" '("Mark symlinks" . dired-mark-symlinks)
-                "h" '("Mark dot-files" . dired-filter-mark-by-dot-files) ;; hidden-files
-                "i" '("Mark git-ignored" . dired-filter-mark-by-git-ignored)
-                "e" '("Mark by predicate" . dired-filter-mark-by-predicate)
-                "(" '("Mark by sexp" . dired-mark-sexp)
-                "m" '("Mark by major-mode" . dired-filter-mark-by-mode)
-                "RET" '("Saved filters" . dired-filter-mark-by-saved-filters)
-                ;; "o" 'dired-filter-mark-by-omit
-                ;; "g" 'dired-filter-mark-by-garbage
-                ;;
-                ;; "j" 'dired-next-marked-file
-                ;; "k" 'dired-prev-marked-file
-                ))
+  "*"   'helheim-dired-mark-map
+  ", m" (cons "mark" 'helheim-dired-mark-map)
   "M-DEL" 'dired-unmark-all-files
   ;; regexp commands
   "r"   (define-keymap
@@ -238,6 +209,35 @@
   ;; "C-c s f C-s"   'dired-isearch-filenames
   ;; "C-c s f C-M-s" 'dired-isearch-filenames-regexp
   )
+
+(defvar-keymap helheim-dired-mark-map
+  "c" '("Change marks" . dired-change-marks)
+  "t" '("Toggle marks" . dired-toggle-marks)
+  "u" '("Remove specific mark" . dired-unmark-all-files)
+  "N" '("Number of marked files" . dired-number-of-marked-files)
+  ;;
+  "." '("Mark by extension" . dired-filter-mark-by-extension)
+  ;; "." '("Mark by extension" . dired-mark-extension)
+  "x" '("Mark executables" . dired-filter-mark-by-executable)
+  "*" '("Mark executables" . dired-mark-executables)
+  "n" '("Mark by name" . dired-filter-mark-by-name)
+  "r" '("Mark by regex" . dired-mark-files-regexp)
+  ;; "r" '("Mark by regex" . dired-filter-mark-by-regexp)
+  "d" '("Mark directories" . dired-filter-mark-by-directory)
+  "/" '("Mark directories" . dired-mark-directories)
+  "f" '("Mark files" . dired-filter-mark-by-file)
+  "l" '("Mark symlinks" . dired-filter-mark-by-symlink)
+  "@" '("Mark symlinks" . dired-mark-symlinks)
+  "h" '("Mark dot-files" . dired-filter-mark-by-dot-files) ;; hidden-files
+  "i" '("Mark git-ignored" . dired-filter-mark-by-git-ignored)
+  "e" '("Mark by predicate" . dired-filter-mark-by-predicate)
+  "(" '("Mark by sexp" . dired-mark-sexp)
+  "m" '("Mark by major-mode" . dired-filter-mark-by-mode)
+  "RET" '("Saved filters" . dired-filter-mark-by-saved-filters)
+  ;; "o" 'dired-filter-mark-by-omit
+  ;; "g" 'dired-filter-mark-by-garbage
+  )
+(fset 'helheim-dired-mark-map helheim-dired-mark-map)
 
 ;;;; image-dired
 
