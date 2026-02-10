@@ -1,29 +1,35 @@
 ;;; helheim-emacs-lisp.el -*- lexical-binding: t; no-byte-compile: t; -*-
-;;; Commentary:
-;;; Keybindings
+;;; Code:
 (require 'hel-core)
 
-(dolist (keymap (list emacs-lisp-mode-map lisp-interaction-mode-map))
+;;; Keybindings
+
+(dolist (keymap (list emacs-lisp-mode-map
+                      lisp-interaction-mode-map))
+  (hel-keymap-set keymap
+    "C-c e"   '("eval" . helheim-elisp-eval-map)) ; <localleader>
   (hel-keymap-set keymap :state 'normal
-    ;; Vim uses "K" but it is occupied in Hel. "M" is near "K" and free.
+    ", e"     '("eval" . helheim-elisp-eval-map) ; <leader>
+    "K"       'helpful-at-point ;; like in Vim
     "M"       'helpful-at-point
     "g d"     '("Find definition" . helheim-elisp-find-definitions)
-    "C-w g d" '("Find definition other window" . helheim-elisp-find-definitions-other-window))
-  (hel-keymap-set keymap
-    "C-c e" (cons "eval"
-                  (define-keymap
-                    "e"   'pp-eval-last-sexp
-                    "f"   'eval-defun
-                    "r"   'elisp-eval-region-or-buffer ; "C-c C-e"
-                    "b"   'eval-buffer
-                    "B"   'elisp-byte-compile-buffer
-                    ;; "m"   'macrostep-expand
-                    "m"   'emacs-lisp-macroexpand
-                    "p"   'pp-macroexpand-last-sexp
-                    "RET" 'eval-print-last-sexp))))
+    "C-w g d" '("Find definition other window" . helheim-elisp-find-definitions-other-window)))
 
 (hel-keymap-set lisp-data-mode-map :state 'normal
-  "M" 'helpful-at-point)
+  "K"   'helpful-at-point
+  "M"   'helpful-at-point)
+
+(defvar-keymap helheim-elisp-eval-map
+  :prefix 'helheim-elisp-eval-map
+  "e"   'pp-eval-last-sexp
+  "f"   'eval-defun
+  "r"   'elisp-eval-region-or-buffer ; "C-c C-e"
+  "b"   'elisp-eval-region-or-buffer
+  "B"   'elisp-byte-compile-buffer
+  ;; "m"   'macrostep-expand
+  "m"   'emacs-lisp-macroexpand
+  "p"   'pp-macroexpand-last-sexp
+  "RET" 'eval-print-last-sexp)
 
 (hel-keymap-global-set "<remap> <eval-expression>" 'pp-eval-expression)
 
