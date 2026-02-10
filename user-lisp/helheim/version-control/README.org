@@ -2,10 +2,8 @@
 
 Related keys are under =SPC v= prefix in ~diff-hl-command-map~ keymap.
 
-| =[[= / =]]= | *prev* / *next* hunk                   |
-| =[{= / =]}= | View *prev* / *next* hunk              |
 | =[v= / =]v= | View *prev* / *next* hunk              |
-| =SPC v v= | View hunk (~diff-hl-show-hunk~)      |
+| =SPC v V= | View hunk (~diff-hl-show-hunk~)      |
 | =SPC v s= | Stage hunk (~diff-hl-stage-dwim~)    |
 | =SPC v r= | Revert hunk (~diff-hl-revert-hunk~)  |
 | ~SPC v =~ | Goto hunk (~diff-hl-diff-goto-hunk~) |

@@ -14,7 +14,6 @@
     "C-c v {" '("View prev hunk" . diff-hl-show-hunk-previous)
     "C-c v s" '("Stage hunk" . diff-hl-stage-dwim)
     "C-c v r" '("Revert hunk" . diff-hl-revert-hunk)
-    "C-c v u" '("Unstage file" . diff-hl-unstage-file)
     "C-c v =" '("Goto hunk" . diff-hl-diff-goto-hunk)))
 
 ;;;; diff-hl-show-hunk mode
