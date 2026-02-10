@@ -44,7 +44,9 @@
   :config
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'dired-omit-mode)
-  (put 'dired-jump 'repeat-map nil))
+  (put 'dired-jump 'repeat-map nil)
+  (load "helheim-dired-lib")
+  (load "helheim-dired-keys"))
 
 (use-package wdired
   :defer t
@@ -123,21 +125,22 @@
 
 ;;;; image-dired
 
-;; Use Thumbnail Managing Standard
-;;
-;; Thumbnails size:
-;; - standard           128 pixels
-;; - standard-large     256 pixels
-;; - standard-x-large   512 pixels
-;; - standard-xx-large
-(setopt image-dired-thumbnail-storage 'standard
-        image-dired-marking-shows-next nil)
-
-;;;; Keybindings
-
-;; Load after `dired-x' because it unconditionally binds "F" and "V" keys.
-(with-eval-after-load 'dired-x
-  (require 'helheim-dired-keys))
+(use-package image-dired
+  :defer t
+  :custom
+  ;; Use Thumbnail Managing Standard
+  ;;
+  ;; Thumbnails size:
+  ;; - standard           128 pixels
+  ;; - standard-large     256 pixels
+  ;; - standard-x-large   512 pixels
+  ;; - standard-xx-large
+  (image-dired-thumbnail-storage 'standard)
+  (image-dired-marking-shows-next nil)
+  :config
+  (add-to-list 'display-buffer-alist
+               `(,(regexp-quote image-dired-thumbnail-buffer)
+                 (display-buffer-reuse-window display-buffer-pop-up-window))))
 
 ;;; .
 (provide 'helheim-dired)

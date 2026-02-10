@@ -3,12 +3,12 @@
 
 (require 'dash)
 (require 'dired)
+(require 'dired-x) ;; Load because it unconditionally binds "F" and "V" keys.
 (require 'dired-subtree)
 
-;; This is full keymap — i.e. all keys from the original keymap are overriden.
+;; All original keys are overriden!
 (hel-keymap-set dired-mode-map
-  "g" nil
-  ;;
+  :unset "g"
   "i"   'dired-toggle-read-only ;; wdired
   "v"   'helheim-dired-toggle-selection
   ;; `search-map'
@@ -243,44 +243,8 @@
 
 (with-eval-after-load 'image-dired
   (hel-keymap-set image-dired-thumbnail-mode-map
-    "w"    nil ; unbind `image-dired-copy-filename-as-kill'
-    "y"   'image-dired-copy-filename-as-kill))
-
-(defvar image-dired-thumbnail-buffer "*image-dired*"
-  "Image-Dired's thumbnail buffer.")
-
-(add-to-list 'display-buffer-alist
-             `(,(regexp-quote image-dired-thumbnail-buffer)
-               (display-buffer-reuse-window display-buffer-pop-up-window)))
-
-;; TODO: Upstream this.
-;; FIX: Original `image-dired-show-all-from-dir' command is carelessly written:
-;;   it calls `image-dired-display-thumbs' which creates and displays
-;;   `image-dired-thumbnail-buffer' with `pop-to-buffer' and calls
-;;   `image-dired--update-header-line'. And then it does it again itself.
-(define-advice image-dired-show-all-from-dir (:override (dir) helheim)
-  "Make a thumbnail buffer for all images in DIR and display it.
-Any file matching `image-dired--file-name-regexp' is considered an
-image file."
-  (interactive "DShow thumbnails for directory: ")
-  (dired dir)
-  (dired-mark-files-regexp (image-dired--file-name-regexp))
-  (let ((files (dired-get-marked-files nil nil nil t)))
-    (cond ((null (cdr files))
-           (message "No image files in directory"))
-          ((or (not image-dired-show-all-from-dir-max-files)
-               (<= (length (cdr files)) image-dired-show-all-from-dir-max-files)
-               (and (length> (cdr files) image-dired-show-all-from-dir-max-files)
-                    (y-or-n-p
-                     (format
-                      "Directory contains more than %d image files.  Proceed?"
-                      image-dired-show-all-from-dir-max-files))))
-           (image-dired-display-thumbs)
-           (let ((inhibit-message t))
-             (dired-unmark-all-marks))
-           (setq default-directory dir))
-          (t
-           (message "Image-Dired canceled")))))
+    :unset "w"
+    "y" 'image-dired-copy-filename-as-kill)) "w"
 
 ;;; Commands
 
@@ -323,75 +287,6 @@ image file."
 
 (defalias '+dired-delete-permanently #'+dired-do-flagged-delete-permanently)
 
-;;;; dired-subtree
-
-;; Make `dired-subtree-beginning' and `dired-subtree-end' commands
-;; work also on the top level and not only in actual subtrees. This
-;; also fix `dired-subtree-mark-subtree'.
-(define-advice dired-subtree-beginning (:override () helheim)
-  "Go to the first file in this subtree."
-  (interactive)
-  (if-let* ((ov (dired-subtree--get-ov)))
-      (progn
-        (goto-char (overlay-start ov))
-        (dired-move-to-filename))
-    ;; else
-    (call-interactively #'dired-prev-subdir)
-    (while (and (< (point) (point-max))
-                (dired-between-files))
-      (forward-line 1))))
-
-(define-advice dired-subtree-end (:override () helheim)
-  "Go to the last file in this subtree."
-  (interactive)
-  (if-let* ((ov (dired-subtree--get-ov)))
-      (progn
-        (goto-char (overlay-end ov))
-        (dired-previous-line 1))
-    (call-interactively #'dired-next-subdir)))
-
-;;;; Prepend file name with ID
-
-;;;###autoload
-(defun helheim-dired-do-add-id ()
-  "Prepend marked files names with timestamp based ID.
-If file already has ID — do nothing."
-  (declare (interactive-only t))
-  (interactive nil dired-mode)
-  (dolist (file (dired-get-marked-files))
-    (unless (helheim-dired-file-id file)
-      (let* ((filename (file-name-nondirectory file))
-             (id (helheim-dired-generate-file-id file))
-             (newname (format "%s--%s" id filename)))
-        (rename-file file newname))))
-  (dired-revert))
-
-;;;###autoload
-(defun helheim-dired-file-id (filepath)
-  "Return FILE's ID if it has one."
-  (let ((filename (file-name-nondirectory filepath)))
-    (if (string-match helheim-file-id-regexp filename)
-        (match-string-no-properties 1 filename))))
-
-;;;###autoload
-(defun helheim-dired-generate-file-id (filepath)
-  "Return ID based on FILE creation time."
-  (let* ((created (helheim-dired--file-creation-time filepath))
-         (modified (file-attribute-modification-time (file-attributes filepath)))
-         (time (if (time-less-p created modified)
-                   created modified)))
-    (format-time-string helheim-id-format time)))
-
-(defun helheim-dired--file-creation-time (filepath)
-  "Return the FILE creation time using the `stat' from coreutils."
-  (-> (process-lines "stat" "--format=%w" filepath)
-      (car)
-      (parse-time-string)
-      (encode-time)))
-
-(defun helheim-dired--file-modification-time (filepath)
-  (file-attribute-modification-time (file-attributes filepath)))
-
 ;;; .
-(provide 'helheim-dired-keys)
+(provide 'helheim-dired '(keys))
 ;;; helheim-dired-keys.el ends here

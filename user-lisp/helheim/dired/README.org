@@ -1,9 +1,14 @@
 * helheim-dired
-** Improvements
+** Enable
+#+begin_src emacs-lisp
+(require 'helheim-dired)
+#+end_src
 
-Dired local minor modes (such as ~dired-hide-details-mode~, ~dired-omit-mode~, etc.)
-are converted into global minor modes, so their state persists across Dired
-buffers.
+** Hacks
+
+- Dired local minor modes (such as ~dired-hide-details-mode~, ~dired-omit-mode~,
+  etc.) are converted into global minor modes, so their state persists across
+  Dired buffers.
 
 ** Keys
 
