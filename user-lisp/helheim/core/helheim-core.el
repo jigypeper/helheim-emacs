@@ -18,9 +18,9 @@
 
 ;;; Dependencies
 
-(elpaca blackout (require 'blackout))
-(elpaca dash (require 'dash))
-(elpaca s)
+(use-package dash :ensure t)
+(use-package s :ensure t)
+(use-package blackout :ensure t)
 (elpaca pcre2el)
 (elpaca wgrep)
 
@@ -75,6 +75,8 @@
 (elpaca adaptive-wrap)
 (elpaca visual-fill-column)
 
+(require 'helheim-lib)
+
 ;;; UI
 ;;;; Misc
 
@@ -100,56 +102,6 @@
 ;; Disable truncation of printed s-expressions in the message buffer.
 (setq eval-expression-print-length nil
       eval-expression-print-level nil)
-
-;;;; Customize color themes
-;;
-;; Just load the theme you want with `load-theme' function. Thats all. You may
-;; use it interactively: press ":" (Hel) or "M-x" (Emacs) and type `load-theme'.
-;;
-;; If you want to customize particular theme use `helheim-theme-set-faces'.
-;; You may enable you customizations imediatly without restarting Emacs place
-;; the cursor right after the closing bracket and evaluate the form with
-;; "SPC e e" (Hel) or "C-x C-e" (Emacs).
-
-(advice-add 'load-theme :around 'helheim-load-theme-a)
-
-(defun helheim-load-theme-a (orig-fun theme &optional no-confirm no-enable)
-  "Load THEME and all customizations made with `helheim-theme-set-faces'."
-  (-each custom-enabled-themes #'disable-theme)
-  (funcall orig-fun theme no-confirm no-enable)
-  (when-let* ((faces (alist-get theme helheim-themes-faces)))
-    (apply #'custom-theme-set-faces theme faces))
-  (or no-enable
-      (enable-theme theme)))
-
-(defvar helheim-themes-faces nil
-  "Per theme faces overrides made by `helheim-theme-set-faces'.
-Alist of the form:
-
-  ((theme1 . ((face1 . specs)
-              (face2 . specs)))
-   (theme2 . ((face1 . specs)
-              (face2 . specs))))")
-
-;; TODO: write docstring
-(defun helheim-theme-set-faces (theme &rest specs)
-  "Set FACE for THEME.
-See `modules/color-themes/helheim-modus-themes.el' for examples how to use
-this function. (Place cursor somewhere inside path and press \"gf\" to let
-Emacs magic happen.)
-
-\(fn THEME [(FACE . SPECS)])"
-  (declare (indent 1))
-  (-each specs (-lambda ((face . spec))
-                 (setf (->> helheim-themes-faces
-                            (alist-get theme)
-                            (alist-get face))
-                       `(((t ,@spec))))))
-  (when (memq theme custom-known-themes)
-    (apply #'custom-theme-set-faces theme
-           (alist-get theme helheim-themes-faces)))
-  (when (memq theme custom-enabled-themes)
-    (enable-theme theme)))
 
 ;;;; Mouse
 
@@ -532,26 +484,6 @@ Use `delete-trailing-whitespace' command."
   :config
   (add-hook 'savehist-save-hook 'helheim-savehist-unpropertize-variables-h)
   (add-hook 'savehist-save-hook 'helheim-savehist-remove-unprintable-registers-h))
-
-(defun helheim-savehist-unpropertize-variables-h ()
-  "Remove text properties from `kill-ring' to reduce savehist cache size."
-  (setq kill-ring (->> kill-ring
-                       (-filter #'stringp)
-                       (-map #'substring-no-properties)))
-  (setq register-alist (-map (-lambda ((reg . item))
-                               (if (stringp item)
-                                   (cons reg (substring-no-properties item))
-                                 (cons reg item)))
-                             register-alist)))
-
-(defun helheim-savehist-remove-unprintable-registers-h ()
-  "Remove unwriteable registers (e.g. containing window configurations).
-Otherwise, `savehist' would discard `register-alist' entirely if we don't omit
-the unwritable tidbits."
-  ;; Save new value in the temp buffer savehist is running
-  ;; `savehist-save-hook' in. We don't want to actually remove the
-  ;; unserializable registers in the current session!
-  (setq-local register-alist (-filter #'savehist-printable register-alist)))
 
 ;;;; Buffers
 

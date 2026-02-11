@@ -68,13 +68,6 @@
   ("\\.ya?ml\\'" . yaml-ts-mode)
   ("clang.format\\'" . yaml-ts-mode))
 
-(defun helheim-install-missing-treesit-grammars ()
-  "Install all missing tree-sitter grammars."
-  (interactive)
-  (cl-loop for (lang . _) in treesit-language-source-alist
-           unless (treesit-language-available-p lang)
-           do (treesit-install-language-grammar lang)))
-
 ;;; .
 (provide 'helheim-tree-sitter)
 ;;; helheim-tree-sitter.el ends here
