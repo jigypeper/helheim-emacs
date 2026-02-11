@@ -12,11 +12,20 @@
   "i"   'dired-toggle-read-only ;; wdired
   "v"   'helheim-dired-toggle-selection
   ;; `search-map'
-  "C-c s f" 'fd-dired
-  "C-c s n" 'find-name-dired
-  "C-c s g" 'fd-grep-dired
-  "C-c s /" 'dired-do-find-regexp
-  "C-c s r" 'dired-do-find-regexp-and-replace ; overrides `query-replace'
+  "C-c s f"   'fd-dired
+  "C-c s n"   'find-name-dired
+  "C-c s g"   'fd-grep-dired
+  "C-c s /"   'dired-do-find-regexp
+  "C-c s r"   'dired-do-find-regexp-and-replace ; overrides `query-replace'
+  ;; git
+  "C-c v i"   'magit-init
+  "C-c v s"   'magit-dired-stage
+  "C-c v u"   'magit-dired-unstage
+  ;; "C-c v f" is bound to `magit-file-dispatch' transient menu which has
+  ;; sence only in a file visiting buffer, so use this prefix to preserve
+  ;; muscle memory.
+  "C-c v f s" 'magit-dired-stage
+  "C-c v f u" 'magit-dired-unstage
   ;; moving
   "h"   'dired-up-directory
   "j"   'helheim-dired-next-line

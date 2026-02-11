@@ -222,6 +222,12 @@ warrants a quick binding.
   the same format used by the =helheim-org= module for Org IDs. This whole
   concept is inspired by [[https://protesilaos.com/emacs/denote][Denote]].
 
+**** Git
+
+| =SPC v i= | Initialize Git repository in current directory |
+| =SPC v s= | Stage marked files                             |
+| =SPC v u= | Unstage marked files                           |
+
 **** encryption and decryption (~epa-dired~)
 
 | =;d= | ~epa-dired-do-decrypt~ |
