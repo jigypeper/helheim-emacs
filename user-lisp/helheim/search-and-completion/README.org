@@ -11,9 +11,6 @@ A common search and complet functionallity you are expect in modern editor.
 - =helheim-consult= ::
   Configures [[https://github.com/minad/consult][Consult]], which provides a set of search-and-preview commands.
 
-- =helheim-deadgrep= ::
-  Configures [[https://github.com/Wilfred/deadgrep][Deadgrep]] — a nice interface to Ripgrep from Emacs.
-
 - =helheim-corfu= ::
   Configures [[https://github.com/minad/corfu][Corfu]], which provides floating menus for code completion.
 
@@ -34,9 +31,6 @@ a smooth start.
 - =Space /= (~consult-ripgrep~) ::
   Search in current project with ripgrep and show results in minibuffer.
   Use =C-c C-c= to export them to ~grep-mode~ buffer.
-
-- =Space s s= (~deadgrep~) ::
-  Search in current project with ripgrep, show results in Deadgrep buffer.
 
 - =C-c C-c= in minibuffer ::
   With search results in minibuffer export them to regular buffer with

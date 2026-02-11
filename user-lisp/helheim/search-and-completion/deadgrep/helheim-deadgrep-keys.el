@@ -1,19 +1,18 @@
-;;; helheim-deadgrep-keys.el -*- lexical-binding: t; no-byte-compile: t; -*-
-;;; Commentary:
-;;
-;; WARNING: Do not load this file manually!
-;; It is autoloaded from `helheim-deadgrep'.
-;;
-;;; Keybindings
-(require 'hel-macros)
-(require 'hel-core)
+;;; helheim-deadgrep-keys.el -*- lexical-binding: t -*-
+
+(eval-when-compile
+  (require 'hel-macros)
+  (require 'hel-core))
 (require 'deadgrep)
 
+;;; Keybindings
+
 (hel-keymap-set deadgrep-mode-map
+  :unset "g"
+
   "i"   'deadgrep-edit-mode
 
   "a"   'deadgrep-incremental ; "a" for amend
-  "g"    nil                  ; unbind `deadgrep-restart'
   "g r" 'deadgrep-restart     ; also "C-w r"
 
   "RET" 'deadgrep-visit-result-other-window
@@ -71,5 +70,5 @@
   (+deadgrep-show-result-other-window))
 
 ;;; .
-(provide 'helheim-deadgrep-keys)
+(provide 'helheim-deadgrep '(keys))
 ;;; helheim-deadgrep-keys.el ends here

@@ -1,9 +1,21 @@
-* Automatically show preveiw in other window
+* helheim-deadgrep
+
+This module setup [[https://github.com/Wilfred/deadgrep][Deadgrep]] — a nice interface to [[https://github.com/BurntSushi/ripgrep][Ripgrep]] from Emacs.
+
+** Enable
+#+begin_src emacs-lisp
+(require 'helheim-deadgrep)
+#+end_src
+
+** Usage
+
+- =SPC s s= — start a ripgrep search
+
+** Configuration
+*** Automatically show preveiw in other window
 
 If you want a preview in other window follows your moves in deadgrep buffer:
-
 #+begin_src emacs-lisp
 (use-package heleheim-deadgrep
-  :hook
-  (deadgrep-mode-hook . next-error-follow-minor-mode))
+  :hook (deadgrep-mode-hook . next-error-follow-minor-mode))
 #+end_src

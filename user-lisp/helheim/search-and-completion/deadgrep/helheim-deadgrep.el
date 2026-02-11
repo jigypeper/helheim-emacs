@@ -1,5 +1,6 @@
 ;;; helheim-deadgrep.el -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;; Config
+
 (require 'hel-macros)
 (require 'hel-core)
 
@@ -13,7 +14,7 @@
   ;; :hook
   ;; (deadgrep-mode-hook . next-error-follow-minor-mode)
   :config
-  (require 'helheim-deadgrep-keys))
+  (load "helheim-deadgrep-keys"))
 
 (add-hook 'deadgrep-mode-hook
           (defun helheim-deadgrep-mode-h ()
