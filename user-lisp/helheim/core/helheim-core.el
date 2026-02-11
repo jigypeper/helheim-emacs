@@ -70,7 +70,8 @@
            do (setf (alist-get mode nerd-icons-mode-icon-alist)
                     icon-spec)))
 
-;; `helheim-word-wrap' dependencies
+;; `helheim-word-wrap' dependencies. It is autoloaded, and Elpaca processes its
+;; queue in `after-init-hook', so we have to install them before that point.
 (elpaca adaptive-wrap)
 (elpaca visual-fill-column)
 
