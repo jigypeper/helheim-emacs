@@ -27,7 +27,9 @@
 (with-eval-after-load 'embark
   (hel-keymap-set embark-general-map
     "C-s" nil   ; `embark-isearch-forward'
-    "C-r" nil)) ; `embark-isearch-backward'
+    "C-r" nil)  ; `embark-isearch-backward'
+  (hel-keymap-set embark-collect-mode-map
+    "s"   nil)) ; `isearch-forward'
 
 (provide 'helheim-disable-isearch)
 ;;; helheim-disable-isearch.el ends here
