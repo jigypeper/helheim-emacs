@@ -74,7 +74,6 @@
 
 (require 'helheim-elpaca)
 (require 'helheim-core)
-(require 'helheim-tree-sitter)
 
 ;;; Color theme
 
