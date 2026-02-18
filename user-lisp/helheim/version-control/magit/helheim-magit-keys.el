@@ -317,11 +317,20 @@ with the key bindings used in Magit."
 
 ;;; Other
 
-(hel-keymap-set magit-blob-mode-map
-  :unset "g"
-  "g r" 'revert-buffer        ;; "g"
-  "z j" 'magit-blob-next      ;; "n"
-  "z k" 'magit-blob-previous) ;; "p"
+(add-hook 'magit-blob-mode-hook #'hel-update-active-keymaps)
+
+;; Unset all keys in base keymap to be able to use them in Insert state
+;; in Ediff in ~{index}~ buffer.
+(hel-keymap-set magit-blob-mode-map :unset '("g" "p" "n" "b" "r" "f" "q"))
+(hel-keymap-set magit-blob-mode-map :state 'normal
+  "] ]" 'magit-blob-next
+  "[ [" 'magit-blob-previous
+  "] v" 'magit-blob-next
+  "[ v" 'magit-blob-previous
+  ", a" 'magit-blame-addition
+  ", r" 'magit-blame-removal
+  ", f" 'magit-blame-reverse
+  "q"   'magit-bury-or-kill-buffer)
 
 ;;; Transient dispatches
 
