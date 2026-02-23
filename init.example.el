@@ -4,35 +4,31 @@
 ;; Set up fonts before anything else so error messages during startup were
 ;; readable.
 ;;
-;; Place cursor before character and press "ga" to see information about it.
+;; Place cursor before the character and press “ga” to see information about it.
 ;; Press "<F1> k ga" to find out which command is bound to "ga".
 
 (setq use-default-font-for-symbols t)
-(let ((font (font-spec :family "Cascadia Code" :size 13.0 :weight 'normal)))
-  (set-face-font 'default font)
-  (set-face-font 'fixed-pitch font))
+(let* ((font "Cascadia Code")
+       (spec (font-spec :family font :size 13.0 :weight 'normal)))
+  (set-face-font 'default spec)
+  (set-face-font 'fixed-pitch spec)
+  ;; Prepend our font to the default fontset to make it the first fallback
+  ;; candidate for itself. This matters when text is bold or italic and the
+  ;; default font lacks glyphs for those styles but does provide them for the
+  ;; regular style. With this change, Emacs will use the regular glyphs from
+  ;; the default font when bold or italic variants are unavailable, instead of
+  ;; falling back to a different font.
+  ;;   BUG: Using `font-spec' with `set-fontset-font' doesn't work, despite
+  ;; documentation claims it is.
+  (set-fontset-font t 'unicode font nil 'prepend))
 
 (require 'cl-macs)
+
 (cl-defun helheim-set-fontset-font (font charsets &key (fontset t) add)
   "Force some code point diapasons to use particular FONT."
   (declare (indent 1))
   (dolist (charset charsets)
     (set-fontset-font fontset charset font nil add)))
-
-;; General Punctuation Unicode Block
-;; ---------------------------------
-;;   When text is bold or italic, Emacs falls back to other fonts if the
-;; main one doesn’t have the required glyphs for those styles. Force Emacs
-;; to use the main font for punctuation.
-;;
-;;   These are all the glyphs, so you can quickly see which ones your font
-;; supports:
-;;  ‐ ‑ ‒ – — ― ‖ ‗
-;; ‘ ’ ‚ ‛ “ ” „ ‟
-;; † ‡ • ‣ ․ ‥ … ‧ ‰ ‱ ′ ″ ‴ ‵ ‶ ‷ ‸ ‹ ›
-;; ※ ‼ ‽ ‾ ‿ ⁀ ⁁ ⁂ ⁃ ⁄ ⁅ ⁆ ⁇ ⁈ ⁉ ⁊ ⁋ ⁌ ⁍
-;; ⁎ ⁏ ⁐ ⁑ ⁒ ⁓ ⁔ ⁕ ⁖ ⁗ ⁘ ⁙ ⁚ ⁛ ⁜ ⁝ ⁞
-(helheim-set-fontset-font (face-font 'default) '((#x2010 . #x205e)))
 
 (helheim-set-fontset-font "Symbols Nerd Font Mono"
   '((#xe5fa . #xe6b7) ;; Seti-UI + Custom  
